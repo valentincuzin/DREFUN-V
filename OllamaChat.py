@@ -121,8 +121,8 @@ def main():
         """,
     
         options = {
-        "temperature": 0.2,  # Réduit la créativité pour plus de précision
-        "max_tokens": 300,   # Limite la longueur de la réponse
+        "temperature": 0.2,
+        "max_tokens": 300,
         
         }
     )
