@@ -109,16 +109,28 @@ class OllamaChat:
 def main():
     chat = OllamaChat(
         model="qwen2.5-coder",
-        system_prompt="You are an expert in Reinforcement Learning. Don't explain, don't argue, give me only the reward methods for the RL problem. Give the code in ```python code blocks```",
-        options={
+        system_prompt = """
+        You are an expert in Reinforcement Learning specialized in designing reward functions. 
+        Strict criteria:
+        - Provide ONLY the reward function code
+        - Use Python format
+        - Briefly comment on the function's logic
+        - Give no additional explanations
+        - Focus on the Gymnasium Acrobot environment
+        - STOP immediately after closing the ``` code block
+        """,
+    
+        options = {
+        "temperature": 0.2,  # Réduit la créativité pour plus de précision
+        "max_tokens": 300,   # Limite la longueur de la réponse
         
         }
     )
 
     print("Programming conversation:\n")
 
-    chat.add_message("I want a method for the reward methods in gymnasium, for the env acrobot")
-    print("User: I want a method for the reward methods in gymnasium, for the env acrobot")
+    chat.add_message("Implement a reward function for the Gymnasium Acrobot environment. I want only the reward_function() code with no additional explanations.")
+    print("User: Implement a reward function for the Gymnasium Acrobot environment. I want only the reward_function() code with no additional explanations.")
 
     print("\nAssistant: ", end='', flush=True)
     response = chat.generate_response(stream=True)
