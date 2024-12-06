@@ -22,6 +22,7 @@ class DREFUN:
         system_prompt = """
         You are an expert in Reinforcement Learning specialized in designing reward functions. 
         Strict criteria:
+        - Provide dependancy if needed
         - Provide ONLY the reward function code
         - Use Python format
         - Briefly comment on the function's logic
@@ -96,7 +97,7 @@ class DREFUN:
 
         if "def " not in cleaned_response:
             raise ValueError("La réponse ne contient pas de définition de fonction valide.")
-
+        print('-'*50)
         print("Code nettoyé pour compilation :\n", cleaned_response)
 
 
@@ -274,7 +275,7 @@ def main():
 
     results = drefun.run_benchmark(
         environments=benchmark_envs,
-        num_iterations=1
+        num_iterations=3
     )
 
     for env_name, env_results in results.items():
