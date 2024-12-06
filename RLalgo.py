@@ -8,28 +8,28 @@ import gymnasium as gym
 
 class PolitiqueDirectSearch:
     def __init__(
-        self,
-        dim_entree: int,
-        dim_sortie: int,
-        det=True,
-    ):
-        self.poids: np.ndarray = [
-            [random.random() for _ in range(dim_entree)],
-            [random.random() for _ in range(dim_entree)],
-        ]
-        self.dim_entree: int = dim_entree
-        self.dim_sortie: int = dim_sortie
-        self.det: bool = det
+            self, 
+            dim_entree:int, 
+            dim_sortie:int, 
+            det = True
+        ):
+        self.dim_entree = dim_entree
+        self.dim_sortie = dim_sortie
+        self.det = det
+        # Matrice entre * sortie
+        self.poids = np.random.rand(dim_entree, dim_sortie)
 
-    def output(self, etat: np.ndarray) -> int:
-        ret = torch.Tensor(self.poids @ etat)
+    def output(self, etat : np.ndarray) -> int:
+        """Calcul de la sortie de la politique
+        - si déterministe : argmax
+        - si stochastique : probabilité de chaque action
+        """
+        # Nous utilisons une fonction d'activation soft max pour que les poids soient à la même échelle
+        prob = torch.nn.functional.softmax(torch.tensor(etat.dot(self.poids)), dim=0)
         if self.det:
-            return torch.argmax(ret).item()
+            return torch.argmax(prob).item()
         else:
-            trans = torch.nn.Softmax()
-            ret = trans(ret)
-            res = torch.Categorical(ret).sample().item()
-            return res
+            return torch.Categorical(probs=prob).sample().item()
 
     def set_poids(self, poids: np.ndarray):
         self.poids = poids
@@ -57,7 +57,8 @@ class PolitiqueDirectSearch:
             action = self.output(state)
             next_observation, reward, terminated, truncated, _ = env.step(action)
             if reward_func is not None:
-                reward = reward_func(action)
+                # print("next_observation", next_observation, "action", action, "reward", reward, "reward func", reward_func(next_observation, action))
+                reward = reward_func(next_observation, action)
             total_rec += reward
             state = next_observation
             if terminated or truncated:
@@ -72,7 +73,7 @@ class PolitiqueDirectSearch:
         meilleur_poid = self.get_poids()
         pref_by_episode = list()
         nb_500_affile = 0
-        for _ in range(1, nb_episodes + 1):
+        for i_episode in range(1, nb_episodes + 1):
             perf = self.rollout(env, reward_func, max_t)
             pref_by_episode.append(perf)
 
@@ -91,13 +92,14 @@ class PolitiqueDirectSearch:
             else:
                 # augmentation de la variance du bruit
                 bruit_std = min(2, bruit_std * 2)
-            poids = meilleur_poid
-            for s in range(len(poids)):
-                for a in range(len(poids[s])):
-                    poids[s][a] = poids[s][a] + random.uniform(
-                        -(bruit_std / 2), (bruit_std / 2)
-                    )
-            self.set_poids(poids)
+             # On calcule le bruit en fonction de la variance
+            bruit = np.random.normal(0, bruit_std, self.dim_entree * self.dim_sortie)
+            # Reshape le bruit pour qu'il ait la même taille que les poids
+            bruit = bruit.reshape(self.dim_entree, self.dim_sortie)
+            # if i_episode % 20 == 0:
+            #     print(f"Episode {i_episode}, perf = {perf}, best perf = {meilleur_perf}, bruit = {bruit_std}")
+            # On ajoute le bruit aux poids
+            self.set_poids(self.get_poids() + bruit)
         return pref_by_episode, meilleur_poid
 
 
