@@ -28,12 +28,12 @@ class DREFUN:
         - Use Python format
         - Briefly comment on the function's logic
         - Give no additional explanations
-        - Focus on the Gymnasium Acrobot environment 
+        - Focus on the Gymnasium environment 
+        - Take into the action space
         - STOP immediately after closing the ``` code block
         """,  # TODO on est pas forcément sur acrobot
             options={
                 "temperature": 0.2,
-                "max_tokens": 300,
             },
         )
 
@@ -61,6 +61,7 @@ class DREFUN:
         
         Requirements:
         - Provide clean, efficient implementation
+        - Take into the account action space
         """  # TODO faut que la fonction prennent une action, faut lui donner l'espace d'action c'est sûr et d'observation ?
 
         self.llm.add_message(prompt)
