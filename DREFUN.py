@@ -31,7 +31,7 @@ class DREFUN:
         - Focus on the Gymnasium environment 
         - Take into the action space
         - STOP immediately after closing the ``` code block
-        """,  # TODO on est pas forcément sur acrobot
+        """,
             options={
                 "temperature": 0.2,
             },
@@ -62,7 +62,7 @@ class DREFUN:
         Requirements:
         - Provide clean, efficient implementation
         - Take into the account action space
-        """  # TODO faut que la fonction prennent une action, faut lui donner l'espace d'action c'est sûr et d'observation ?
+        """  # TODO better prompt with completion of the function
 
         self.llm.add_message(prompt)
         response = self.llm.generate_response()  # TODO generate 2 responses
@@ -70,6 +70,13 @@ class DREFUN:
         # print("LLM Response:", response)
 
         reward_func = self._compile_reward_function(response)
+        state, _ = self.env.reset()
+        action = self.learning_method.output(state)
+        self._test_reward_function(
+            reward_func,
+            observation=state,
+            action=action,
+        )
         self.reward_functions.append(reward_func)
 
         return reward_func
@@ -104,16 +111,14 @@ class DREFUN:
 
         reward_function_name = cleaned_response.split("(")[0].split()[-1]
         reward_function = exec_globals.get(reward_function_name)
-        if not callable(reward_function):  # TODO comprendre comment ça fonctionne
+        if not callable(reward_function):
             raise ValueError(
                 "La fonction reward n'a pas été trouvée ou n'est pas valide."
             )
 
         return reward_function
 
-    def test_reward_function(
-        self, reward_function: Callable, *args, **kwargs
-    ):  # TODO la tester automatiquement
+    def _test_reward_function(self, reward_function: Callable, *args, **kwargs):
         """
         Test the compiled reward function with example inputs.
 
@@ -125,32 +130,10 @@ class DREFUN:
         try:
             reward = reward_function(*args, **kwargs)
             print(f"Reward function output: {reward}")
-        except Exception as e:
+        except (
+            Exception
+        ) as e:  # TODO il faut regénérer la fonction si ça ne fonctionne pas
             raise RuntimeError(f"Error during reward function execution: {e}")
-
-    def _reinforce_learning(self):
-        """
-        TODO Implement REINFORCE learning method
-        """
-        pass
-
-    def _direct_search(self):
-        """
-        TODO Implement Direct Search learning method
-        """
-        pass
-
-    def _reinforce_learning(self):
-        """
-        TODO Implement REINFORCE learning method
-        """
-        pass
-
-    def _direct_search(self):
-        """
-        TODO Implement Direct Search learning method
-        """
-        pass
 
     def self_refine_reward(
         self, current_reward_func: Callable, performance_metrics: Dict

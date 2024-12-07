@@ -4,7 +4,6 @@ from RLalgo import PolitiqueDirectSearch
 import gymnasium as gym
 from utils import eval_politique, plot_sumrwdperepi
 
-
 if __name__ == "__main__":
     env = gym.make("CartPole-v1")
     policy_raw = PolitiqueDirectSearch(4, 2)
@@ -23,15 +22,9 @@ if __name__ == "__main__":
 
     print(reward_func)
 
-    drefun.test_reward_function(
-        reward_func,
-        observation=[0.0, 0.1, -0.2, 0.3],
-        action=0,
-    )
-
     policy_test = deepcopy(policy_raw)
     raw_res, _, succrate_res = policy_raw.train(env)
-    res, _,  succrate = policy_test.train(env, reward_func)
+    res, _, succrate = policy_test.train(env, reward_func)
 
     # plot_sumrwdperepi(raw_res)
     # plot_sumrwdperepi(res)

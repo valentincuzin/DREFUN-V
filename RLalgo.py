@@ -7,19 +7,14 @@ import gymnasium as gym
 
 
 class PolitiqueDirectSearch:
-    def __init__(
-            self, 
-            dim_entree:int, 
-            dim_sortie:int, 
-            det = True
-        ):
+    def __init__(self, dim_entree: int, dim_sortie: int, det=True):
         self.dim_entree = dim_entree
         self.dim_sortie = dim_sortie
         self.det = det
         # Matrice entre * sortie
         self.poids = np.random.rand(dim_entree, dim_sortie)
 
-    def output(self, etat : np.ndarray) -> int:
+    def output(self, etat: np.ndarray) -> int:
         """Calcul de la sortie de la politique
         - si déterministe : argmax
         - si stochastique : probabilité de chaque action
@@ -101,7 +96,7 @@ class PolitiqueDirectSearch:
             else:
                 # augmentation de la variance du bruit
                 bruit_std = min(2, bruit_std * 2)
-             # On calcule le bruit en fonction de la variance
+            # On calcule le bruit en fonction de la variance
             bruit = np.random.normal(0, bruit_std, self.dim_entree * self.dim_sortie)
             # Reshape le bruit pour qu'il ait la même taille que les poids
             bruit = bruit.reshape(self.dim_entree, self.dim_sortie)
