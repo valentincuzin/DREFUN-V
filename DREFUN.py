@@ -65,20 +65,43 @@ class DREFUN:
         """  # TODO better prompt with completion of the function
 
         self.llm.add_message(prompt)
-        response = self.llm.generate_response()  # TODO generate 2 responses
-
-        # print("LLM Response:", response)
-
-        reward_func = self._compile_reward_function(response)
-        state, _ = self.env.reset()
-        action = self.learning_method.output(state)
-        self._test_reward_function(
-            reward_func,
-            observation=state,
-            action=action,
-        )
+        response = self.llm.generate_response()  # TODO generate 2 responses        
+        response = self.get_code(response)
+        reward_func = self._get_runnable_function(response)
         self.reward_functions.append(reward_func)
 
+        return reward_func
+
+    def get_code(self, response: str) -> str:
+        cleaned_response = response.strip("```").replace("python", "").strip()
+        if "def " not in cleaned_response:
+            raise ValueError(
+                "La réponse ne contient pas de définition de fonction valide."
+            )
+        print("-" * 50)
+        print("Code nettoyé pour compilation :\n", cleaned_response)
+        return cleaned_response
+
+    def _get_runnable_function(self, response: str, error: str=None) -> Callable:
+        if error is not None:
+            self.llm.add_message(error)
+            response = self.llm.generate_response()
+            response = self.get_code(response)
+        try:
+            reward_func = self._compile_reward_function(response)
+            state, _ = self.env.reset()
+            action = self.learning_method.output(state)
+            self._test_reward_function(
+                reward_func,
+                observation=state,
+                action=action,
+            )
+        except SyntaxError as e:
+            print(f"Error syntax {e}")
+            return self._get_runnable_function(response, str(e))
+        except RuntimeError as e:
+            print(f"Error execution {e}")
+            return self._get_runnable_function(response, str(e))
         return reward_func
 
     def _compile_reward_function(self, response: str) -> Callable:
@@ -92,29 +115,18 @@ class DREFUN:
         Returns:
             Callable: Compiled reward function.
         """
-        cleaned_response = response.strip("```").replace("python", "").strip()
-
-        if "def " not in cleaned_response:
-            raise ValueError(
-                "La réponse ne contient pas de définition de fonction valide."
-            )
-        print("-" * 50)
-        print("Code nettoyé pour compilation :\n", cleaned_response)
 
         exec_globals = {}
+        exec_globals['np'] = np
         try:
-            exec(cleaned_response, exec_globals)
-        except (
-            SyntaxError
-        ) as e:  # TODO il faut regénérer la fonction si ça ne fonctionne pas
-            raise ValueError(f"Erreur de syntaxe dans le code généré : {e}")
+            exec(response, exec_globals)
+        except SyntaxError as e:
+            raise SyntaxError(f"Syntax error in the generated code : {e}")
 
-        reward_function_name = cleaned_response.split("(")[0].split()[-1]
+        reward_function_name = response.split("(")[0].split()[
+            -1
+        ]  # récup le nom de la fonction
         reward_function = exec_globals.get(reward_function_name)
-        if not callable(reward_function):
-            raise ValueError(
-                "La fonction reward n'a pas été trouvée ou n'est pas valide."
-            )
 
         return reward_function
 
