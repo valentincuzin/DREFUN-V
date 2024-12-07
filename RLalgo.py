@@ -52,6 +52,7 @@ class PolitiqueDirectSearch:
         execute un episode sur l'environnement env avec la politique et renvoie la somme des recompenses obtenues sur l'épisode
         """
         total_rec = 0
+        is_success = False
         state, _ = env.reset(seed=random.randint(0, 5000))
         for _ in range(1, max_t + 1):
             action = self.output(state)
@@ -61,20 +62,28 @@ class PolitiqueDirectSearch:
                 reward = reward_func(next_observation, action)
             total_rec += reward
             state = next_observation
-            if terminated or truncated:
-                return total_rec
-        return total_rec
+            if terminated:
+                return total_rec, is_success
+            if truncated:
+                is_success = True
+                return total_rec, is_success
+        return total_rec, is_success
 
     def train(
         self, env, reward_func=None, nb_episodes=5000, max_t=1000
     ) -> tuple[list, np.ndarray]:
+        """
+        TODO return only success_rate + other param maybe
+        """
         bruit_std = 1e-2
         meilleur_perf = 0
         meilleur_poid = self.get_poids()
         pref_by_episode = list()
         nb_500_affile = 0
+        nb_success = 0
         for i_episode in range(1, nb_episodes + 1):
-            perf = self.rollout(env, reward_func, max_t)
+            perf, success = self.rollout(env, reward_func, max_t)
+            nb_success += success
             pref_by_episode.append(perf)
 
             if perf == 500:
@@ -82,7 +91,7 @@ class PolitiqueDirectSearch:
             else:
                 nb_500_affile = 0
             if nb_500_affile == 10:
-                return pref_by_episode, meilleur_poid
+                return pref_by_episode, meilleur_poid, (nb_success / i_episode)
 
             if perf >= meilleur_perf:
                 meilleur_perf = perf
@@ -100,7 +109,7 @@ class PolitiqueDirectSearch:
             #     print(f"Episode {i_episode}, perf = {perf}, best perf = {meilleur_perf}, bruit = {bruit_std}")
             # On ajoute le bruit aux poids
             self.set_poids(self.get_poids() + bruit)
-        return pref_by_episode, meilleur_poid
+        return pref_by_episode, meilleur_poid, (nb_success / nb_episodes)
 
 
 if __name__ == "__main__":

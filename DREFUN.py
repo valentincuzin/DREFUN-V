@@ -29,7 +29,7 @@ class DREFUN:
         - Briefly comment on the function's logic
         - Give no additional explanations
         - Focus on the Gymnasium environment 
-        - Take intro the action space
+        - Take into the action space
         - STOP immediately after closing the ``` code block
         """,  # TODO on est pas forcément sur acrobot
             options={

@@ -30,8 +30,11 @@ if __name__ == "__main__":
     )
 
     policy_test = deepcopy(policy_raw)
-    raw_res, _ = policy_raw.train(env)
-    res, _ = policy_test.train(env, reward_func)
+    raw_res, _, succrate_res = policy_raw.train(env)
+    res, _,  succrate = policy_test.train(env, reward_func)
 
-    plot_sumrwdperepi(raw_res)
-    plot_sumrwdperepi(res)
+    # plot_sumrwdperepi(raw_res)
+    # plot_sumrwdperepi(res)
+
+    print("Success rate without reward function:", succrate_res)
+    print("Success rate with reward function:", succrate)
