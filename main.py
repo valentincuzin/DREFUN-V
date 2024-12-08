@@ -10,8 +10,8 @@ if __name__ == "__main__":
     init_logger()
     logger = getLogger("DREFUN")
     env = gym.make("CartPole-v1")
-    policy_raw = PolitiqueDirectSearch(env)
-    drefun = DREFUN(policy_raw, env)
+    learning_method = PolitiqueDirectSearch(env)
+    drefun = DREFUN(learning_method, env)
 
     reward_func = drefun.generate_reward_function(
         task_description="""Balance a pole on a cart, 
@@ -24,11 +24,8 @@ if __name__ == "__main__":
         """,
     )
 
-    logger.debug(reward_func)
-
-    policy_test = deepcopy(policy_raw)
-    raw_res, _, succrate_res = policy_raw.train(env)
-    res, _, succrate = policy_test.train(env, reward_func)
+    raw_res, _, succrate_res = learning_method.train(env)
+    res, _, succrate = learning_method.train(env, reward_func)
 
     # plot_sumrwdperepi(raw_res)
     # plot_sumrwdperepi(res)

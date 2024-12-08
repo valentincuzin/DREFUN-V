@@ -1,4 +1,5 @@
 from utils import eval_politique
+from copy import deepcopy
 
 import numpy as np
 import random
@@ -70,6 +71,7 @@ class PolitiqueDirectSearch:
         """
         TODO return only success_rate + other param maybe
         """
+        original_state: PolitiqueDirectSearch = deepcopy(self)
         bruit_std = 1e-2
         meilleur_perf = 0
         meilleur_poid = self.get_poids()
@@ -104,11 +106,5 @@ class PolitiqueDirectSearch:
             #     print(f"Episode {i_episode}, perf = {perf}, best perf = {meilleur_perf}, bruit = {bruit_std}")
             # On ajoute le bruit aux poids
             self.set_poids(self.get_poids() + bruit)
-        return pref_by_episode, meilleur_poid, (nb_success / nb_episodes)
-
-
-if __name__ == "__main__":
-    env = gym.make("CartPole-v1")
-    policy = PolitiqueDirectSearch(4, 2)
-    policy.train(env)
-    print(eval_politique(policy, env))
+        self.__dict__.update(original_state.__dict__)
+        return meilleur_poid, pref_by_episode, (nb_success / nb_episodes)
