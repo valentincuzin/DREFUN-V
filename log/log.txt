@@ -1,0 +1,105 @@
+21:11:13 OllamaChat.py:30 INFO
+	System: 
+        You are an expert in Reinforcement Learning specialized in designing reward functions. 
+        Strict criteria:
+        - Provide dependancy if needed
+        - Provide ONLY the reward function code
+        - Use Python format
+        - Briefly comment on the function's logic
+        - Give no additional explanations
+        - Focus on the Gymnasium environment 
+        - Take into the action space
+        - STOP immediately after closing the ``` code block
+        
+
+21:11:28 DREFUN.py:82 INFO
+	Code nettoyé pour compilation :
+def custom_reward(observation, action):
+    """
+    observation: tuple (cart_position, cart_velocity, pole_angle, pole_angular_velocity)
+    action: integer representing the action taken (0 or 1)
+
+    The reward is +1 for every step taken, including the termination step.
+    """
+    return 1.0
+
+21:11:30 DREFUN.py:206 INFO
+	the policy with human reward:
+- during the train: SR 0.2972972972972973, nb_ep 37
+- and during the test: SR 0.0
+
+
+21:11:30 DREFUN.py:211 INFO
+	the policy with llm reward:
+- during the train: SR 0.0004, nb_ep 5000
+- and during the test: SR 0.0
+
+
+21:12:58 OllamaChat.py:30 INFO
+	System: 
+        You are an expert in Reinforcement Learning specialized in designing reward functions. 
+        Strict criteria:
+        - Provide dependancy if needed
+        - Provide ONLY the reward function code
+        - Use Python format
+        - Briefly comment on the function's logic
+        - Give no additional explanations
+        - Focus on the Gymnasium environment 
+        - Take into the action space
+        - STOP immediately after closing the ``` code block
+        
+
+21:13:22 DREFUN.py:82 INFO
+	Code nettoyé pour compilation :
+import numpy as np
+
+def custom_reward(observation, action):
+    # Calculate the angle of the pole
+    pole_angle = observation[2]
+    
+    # Define a threshold for the pole being upright
+    upright_threshold = 0.1
+    
+    # Reward if the pole is within the upright threshold
+    if abs(pole_angle) <= upright_threshold:
+        reward = 1.0
+    else:
+        reward = -1.0
+    
+    return reward
+```
+
+This reward function rewards the agent with +1 for keeping the pole within a certain angular threshold (upright), and penalizes it with -1 otherwise.
+
+21:13:22 DREFUN.py:100 WARNING
+	Error syntax Syntax error in the generated code : invalid syntax (<string>, line 17)
+
+21:13:44 DREFUN.py:82 INFO
+	Code nettoyé pour compilation :
+def custom_reward(observation, action):
+    # Calculate the angle of the pole
+    pole_angle = observation[2]
+    
+    # Define a threshold for the pole being upright
+    upright_threshold = 0.1
+    
+    # Reward if the pole is within the upright threshold
+    if abs(pole_angle) <= upright_threshold:
+        reward = 1.0
+    else:
+        reward = -1.0
+    
+    return reward
+
+21:13:58 DREFUN.py:206 INFO
+	the policy with human reward:
+- during the train: SR 0.10807692307692307, nb_ep 2600
+- and during the test: SR 1.0
+
+
+21:13:58 DREFUN.py:211 INFO
+	the policy with llm reward:
+- during the train: SR 0.5, nb_ep 22
+- and during the test: SR 1.0
+
+

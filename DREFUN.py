@@ -5,7 +5,8 @@ from typing import List, Dict, Callable, Optional
 from OllamaChat import OllamaChat
 from logging import getLogger
 
-logger = getLogger('DREFUN')
+logger = getLogger("DREFUN")
+
 
 class DREFUN:
     def __init__(
@@ -13,7 +14,7 @@ class DREFUN:
         learning_method: Callable,
         env,
         model: str = "qwen2.5-coder",
-        options: dict = {}
+        options: dict = {},
     ):
         """
         Initialize DREFUN architecture for dynamic reward function generation
@@ -65,7 +66,7 @@ class DREFUN:
         """  # TODO better prompt with completion of the function
 
         self.llm.add_message(prompt)
-        response = self.llm.generate_response()  # TODO generate 2 responses        
+        response = self.llm.generate_response()  # TODO generate 2 responses
         response = self._get_code(response)
         reward_func = self._get_runnable_function(response)
         self.reward_functions.append(reward_func)
@@ -81,7 +82,7 @@ class DREFUN:
         logger.info("Code nettoyé pour compilation :\n" + cleaned_response)
         return cleaned_response
 
-    def _get_runnable_function(self, response: str, error: str=None) -> Callable:
+    def _get_runnable_function(self, response: str, error: str = None) -> Callable:
         if error is not None:
             self.llm.add_message(error)
             response = self.llm.generate_response()
@@ -116,7 +117,7 @@ class DREFUN:
         """
 
         exec_globals = {}
-        exec_globals['np'] = np
+        exec_globals["np"] = np
         try:
             exec(response, exec_globals)
         except SyntaxError as e:
@@ -141,9 +142,7 @@ class DREFUN:
         try:
             reward = reward_function(*args, **kwargs)
             logger.debug(f"Reward function output: {reward}")
-        except (
-            Exception
-        ) as e:
+        except Exception as e:
             raise RuntimeError(f"Error during reward function execution: {e}")
 
     def self_refine_reward(
@@ -174,8 +173,11 @@ class DREFUN:
 
         return self._compile_reward_function(refined_response)
 
-    def evaluate_policy(  # penser aux métrics objective propre à l'environnment
-        self, num_episodes: int = 100, visual: bool = False
+    def evaluate_policy(
+        self,
+        objectives_metrics: List[callable] = [],
+        num_episodes: int = 100,
+        visual: bool = False,
     ) -> Dict:
         """
         Evaluate policy performance for a given reward function
@@ -191,11 +193,65 @@ class DREFUN:
             "episode_lengths": [],
             "success_rate": 0.0,
         }
-        # Faire l'entrainement de la politique pour voir la vitesse d'apprentissage, avec success_rate
-        raw_weight, raw_perfs, raw_sr = self.learning_method.train(self.env)
-        weight, perfs, sr = self.learning_method.train(self.env, self.reward_functions[-1])
-        # Faire le test de la politique optimale apprise, puis 
-        return performance_metrics
+        raw_policy, raw_perfs, raw_sr, raw_nb_ep = self.learning_method.train(
+            save_name=f"model/raw_{self.learning_method}_{self.env.spec.name}.model",
+        )
+        policy, perfs, sr, nb_ep = self.learning_method.train(
+            self.reward_functions[-1],
+            save_name=f"model/{self.learning_method}_{self.env.spec.name}{len(self.reward_functions)}.model",
+        )
+        raw_states, raw_rewards, raw_sr_test = self.test_policy(policy)
+        states, rewards, sr_test = self.test_policy(policy, self.reward_functions[-1])
+        # TODO penser aux métrics objective propre à l'environnment, une raison de faire une class environnement extend de celle de base ?
+        logger.info(
+            "the policy with human reward:"
+            + f"\n- during the train: SR {raw_sr}, nb_ep {raw_nb_ep}"
+            + f"\n- and during the test: SR {raw_sr_test}\n"
+        )
+        logger.info(
+            "the policy with llm reward:"
+            + f"\n- during the train: SR {sr}, nb_ep {nb_ep}"
+            + f"\n- and during the test: SR {sr_test}\n"
+        )
+        
+
+    def test_policy(
+        self,
+        policy,
+        reward_func=None,
+        nb_episodes=100,
+        max_t=1000,
+    ) -> list:
+        all_rewards = []
+        all_states = []
+        nb_success = 0
+        x_max = 0
+        x_min = float("+inf")
+        for epi in range(1, nb_episodes + 1):
+            total_reward = 0
+            state, _ = self.env.reset()
+            for i in range(1, max_t + 1):
+                action = policy.output(state)
+                next_observation, reward, terminated, truncated, _ = self.env.step(
+                    action
+                )
+                if reward_func is not None:
+                    reward = reward_func(next_observation, action)
+                total_reward += reward
+                state = next_observation
+                all_states.append(state)
+                if terminated:
+                    break
+                if truncated:
+                    nb_success += 1
+                    break
+            all_rewards.append(total_reward)
+            if total_reward > x_max:
+                x_max = total_reward
+            if total_reward < x_min:
+                x_min = total_reward
+        all_rewards = [x - x_min / x_max - x_min for x in all_rewards]  # Min-Max normalized
+        return all_states, all_rewards, (nb_success / nb_episodes)
 
     def run_benchmark(
         self, environments: List[gym.Env], num_iterations: int = 5

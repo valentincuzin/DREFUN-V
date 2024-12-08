@@ -42,35 +42,3 @@ def plot_sumrwdperepi_overseed2(rewards_over_seeds: list):
         title=""
     )
     plt.show()
-
-
-def eval_politique(
-    politique,
-    env,
-    nb_episodes=100,
-    max_t=1000,
-    seed=random.randint(0, 5000),
-    init_large=False,
-) -> list:
-    somme_rec = []
-    total_rec = 0
-    meilleurs_scores = 0
-    for epi in range(1, nb_episodes + 1):
-        if init_large:
-            state, _ = env.reset(seed=seed, options={"low": -0.2, "high": 0.2})
-        else:
-            state, _ = env.reset(seed=seed)
-
-        for i in range(1, max_t + 1):
-            action = politique.output(state)
-            next_observation, reward, terminated, truncated, info = env.step(action)
-            total_rec += reward
-            state = next_observation
-            if terminated or truncated:
-                epi += 1
-                somme_rec.append(total_rec)
-                if total_rec > meilleurs_scores:
-                    meilleurs_scores = total_rec
-                total_rec = 0
-                break
-    return somme_rec

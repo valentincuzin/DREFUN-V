@@ -1,10 +1,8 @@
 from log.log_config import init_logger
 from logging import getLogger
-from copy import deepcopy
 from DREFUN import DREFUN
 from RLalgo import PolitiqueDirectSearch
 import gymnasium as gym
-from utils import eval_politique, plot_sumrwdperepi
 
 if __name__ == "__main__":
     init_logger()
@@ -24,11 +22,4 @@ if __name__ == "__main__":
         """,
     )
 
-    raw_res, _, succrate_res = learning_method.train(env)
-    res, _, succrate = learning_method.train(env, reward_func)
-
-    # plot_sumrwdperepi(raw_res)
-    # plot_sumrwdperepi(res)
-
-    logger.info(f"Success rate without reward function: {succrate_res}")
-    logger.info(f"Success rate with reward function: {succrate}")
+    drefun.evaluate_policy()
