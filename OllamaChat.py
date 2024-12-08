@@ -1,6 +1,9 @@
 import requests
 import json
 from typing import List, Dict, Union, Optional, Generator
+from logging import getLogger
+
+logger = getLogger('DREFUN')
 
 OLLAMA_CHAT_API_URL = "http://localhost:11434/api/chat"
 
@@ -24,7 +27,7 @@ class OllamaChat:
         self.options = options or {}
         
         if system_prompt:
-            print(f"System: {system_prompt}")
+            logger.info(f"System: {system_prompt}")
             self.add_message(system_prompt, role="system")
     
     def add_message(
@@ -103,7 +106,7 @@ class OllamaChat:
             return stream_response()
         
         except requests.exceptions.RequestException as e:
-            print(f"Connection error: {e}")
+            logger.error(f"Connection error: {e}")
             return ""
 
 def main():
@@ -123,7 +126,6 @@ def main():
         options = {
         "temperature": 0.2,
         "max_tokens": 300,
-        
         }
     )
 

@@ -1,3 +1,5 @@
+from log.log_config import init_logger
+from logging import getLogger
 from copy import deepcopy
 from DREFUN import DREFUN
 from RLalgo import PolitiqueDirectSearch
@@ -5,8 +7,10 @@ import gymnasium as gym
 from utils import eval_politique, plot_sumrwdperepi
 
 if __name__ == "__main__":
+    init_logger()
+    logger = getLogger("DREFUN")
     env = gym.make("CartPole-v1")
-    policy_raw = PolitiqueDirectSearch(4, 2)
+    policy_raw = PolitiqueDirectSearch(env)
     drefun = DREFUN(policy_raw, env)
 
     reward_func = drefun.generate_reward_function(
@@ -20,7 +24,7 @@ if __name__ == "__main__":
         """,
     )
 
-    print(reward_func)
+    logger.debug(reward_func)
 
     policy_test = deepcopy(policy_raw)
     raw_res, _, succrate_res = policy_raw.train(env)
@@ -29,5 +33,5 @@ if __name__ == "__main__":
     # plot_sumrwdperepi(raw_res)
     # plot_sumrwdperepi(res)
 
-    print("Success rate without reward function:", succrate_res)
-    print("Success rate with reward function:", succrate)
+    logger.info(f"Success rate without reward function: {succrate_res}")
+    logger.info(f"Success rate with reward function: {succrate}")

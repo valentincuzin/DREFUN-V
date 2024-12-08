@@ -7,12 +7,12 @@ import gymnasium as gym
 
 
 class PolitiqueDirectSearch:
-    def __init__(self, dim_entree: int, dim_sortie: int, det=True):
-        self.dim_entree = dim_entree
-        self.dim_sortie = dim_sortie
+    def __init__(self, env, det=True):
+        self.dim_entree = env.observation_space.shape[0]
+        self.dim_sortie =  env.action_space.n
         self.det = det
         # Matrice entre * sortie
-        self.poids = np.random.rand(dim_entree, dim_sortie)
+        self.poids = np.random.rand(self.dim_entree, self.dim_sortie)
 
     def output(self, etat: np.ndarray) -> int:
         """Calcul de la sortie de la politique

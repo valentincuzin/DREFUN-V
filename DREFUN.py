@@ -3,7 +3,9 @@ import numpy as np
 from typing import List, Dict, Callable, Optional
 
 from OllamaChat import OllamaChat
+from logging import getLogger
 
+logger = getLogger('DREFUN')
 
 class DREFUN:
     def __init__(
@@ -78,8 +80,7 @@ class DREFUN:
             raise ValueError(
                 "La réponse ne contient pas de définition de fonction valide."
             )
-        print("-" * 50)
-        print("Code nettoyé pour compilation :\n", cleaned_response)
+        logger.info("Code nettoyé pour compilation :\n" + cleaned_response)
         return cleaned_response
 
     def _get_runnable_function(self, response: str, error: str=None) -> Callable:
@@ -97,10 +98,10 @@ class DREFUN:
                 action=action,
             )
         except SyntaxError as e:
-            print(f"Error syntax {e}")
+            logger.warning(f"Error syntax {e}")
             return self._get_runnable_function(response, str(e))
         except RuntimeError as e:
-            print(f"Error execution {e}")
+            logger.warning(f"Error execution {e}")
             return self._get_runnable_function(response, str(e))
         return reward_func
 
@@ -141,10 +142,10 @@ class DREFUN:
         """
         try:
             reward = reward_function(*args, **kwargs)
-            print(f"Reward function output: {reward}")
+            logger.debug(f"Reward function output: {reward}")
         except (
             Exception
-        ) as e:  # TODO il faut regénérer la fonction si ça ne fonctionne pas
+        ) as e:
             raise RuntimeError(f"Error during reward function execution: {e}")
 
     def self_refine_reward(
