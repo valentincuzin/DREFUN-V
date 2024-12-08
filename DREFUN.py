@@ -1,6 +1,6 @@
 import gymnasium as gym
 import numpy as np
-from typing import List, Dict, Callable, Optional
+from typing import List, Dict, Callable
 
 from OllamaChat import OllamaChat
 from logging import getLogger
@@ -145,7 +145,7 @@ class DREFUN:
         except Exception as e:
             raise RuntimeError(f"Error during reward function execution: {e}")
 
-    def self_refine_reward(
+    def self_refine_reward(  # TODO make it work
         self, current_reward_func: Callable, performance_metrics: Dict
     ) -> Callable:
         """
@@ -213,7 +213,6 @@ class DREFUN:
             + f"\n- during the train: SR {sr}, nb_ep {nb_ep}"
             + f"\n- and during the test: SR {sr_test}\n"
         )
-        
 
     def test_policy(
         self,
@@ -250,7 +249,9 @@ class DREFUN:
                 x_max = total_reward
             if total_reward < x_min:
                 x_min = total_reward
-        all_rewards = [x - x_min / x_max - x_min for x in all_rewards]  # Min-Max normalized
+        all_rewards = [
+            x - x_min / x_max - x_min for x in all_rewards
+        ]  # Min-Max normalized
         return all_states, all_rewards, (nb_success / nb_episodes)
 
     def run_benchmark(

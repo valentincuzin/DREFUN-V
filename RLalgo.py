@@ -1,22 +1,20 @@
 from copy import deepcopy
 
 import numpy as np
-import random
 import torch
-import gymnasium as gym
 
 
 class PolitiqueDirectSearch:
     def __init__(self, env, det=True):
         self.dim_entree = env.observation_space.shape[0]
-        self.dim_sortie =  env.action_space.n
+        self.dim_sortie = env.action_space.n
         self.det = det
         self.env = env
         # Matrice entre * sortie
         self.poids = np.random.rand(self.dim_entree, self.dim_sortie)
 
     def __repr__(self):
-        return 'DirectSearch'
+        return "DirectSearch"
 
     def output(self, etat: np.ndarray) -> int:
         """Calcul de la sortie de la politique
@@ -68,7 +66,7 @@ class PolitiqueDirectSearch:
         return total_rec, is_success
 
     def train(
-        self, reward_func=None, nb_episodes=5000, max_t=1000, save_name=''
+        self, reward_func=None, nb_episodes=5000, max_t=1000, save_name=""
     ) -> tuple[list, np.ndarray]:
         original_state: PolitiqueDirectSearch = deepcopy(self)
         bruit_std = 1e-2
