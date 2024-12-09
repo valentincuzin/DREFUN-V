@@ -3,9 +3,19 @@ from logging import getLogger
 from DREFUN import DREFUN
 from RLalgo import PolitiqueDirectSearch
 import gymnasium as gym
+import argparse
 
-if __name__ == "__main__":  # TODO parametrer le mode debug
-    init_logger()
+
+if __name__ == "__main__":
+    parser = argparse.ArgumentParser()
+    parser.add_argument("-v", "--verbose", action="store_true", help="Enable verbose mode")
+    args = parser.parse_args()
+
+    if args.verbose:
+        init_logger("DEBUG")
+        print("Verbose mode enabled")
+    else:
+        init_logger("INFO")
     logger = getLogger("DREFUN")
     env = gym.make("CartPole-v1")
     learning_method = PolitiqueDirectSearch(env)

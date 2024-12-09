@@ -1,7 +1,9 @@
 from logging.config import dictConfig
 import logging
 
-def init_logger(log_level="DEBUG", log_file='log/log.txt'):
+def init_logger(
+        log_level : str ="INFO", 
+        log_file : str ='log/log.txt'):
     """Function that init the logger object that's properly setup"""
     
     LOG_FILE: str = log_file
