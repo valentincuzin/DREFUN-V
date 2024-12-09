@@ -63,7 +63,6 @@ if __name__ == "__main__":
         1 Cart Velocity -Inf Inf
         2 Pole Angle ~ -0.418 rad (-24°) ~ 0.418 rad (24°)
         3 Pole Angular Velocity -Inf Inf
-        Since the goal is to keep the pole upright for as long as possible, by default, a reward of +1 is given for every step taken, including the termination step. The default reward threshold is 500 for v1
         """,
     )
     

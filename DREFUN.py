@@ -81,6 +81,7 @@ class DREFUN:
         """
 
         self.llm.add_message(prompt)
+        self.logger.info(prompt)
         response = self.llm.generate_response(stream=self.isStream)
         response = self.llm.print_Generator_and_return(response)
         response = self._get_code(response)
