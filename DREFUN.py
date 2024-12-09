@@ -27,14 +27,12 @@ class DREFUN:
             system_prompt="""
         You are an expert in Reinforcement Learning specialized in designing reward functions.
         Strict criteria:
-        - Provide dependancy if needed
-        - Provide ONLY the reward function code
+        - Complete ONLY the reward function code
         - Use Python format
-        - Briefly comment on the function's logic
         - Give no additional explanations
         - Focus on the Gymnasium environment 
-        - Take into the action space
-        - STOP immediately after closing the ``` code block
+        - Take into the observation of the state, the terminated and truncated boolean
+        - STOP immediately your completion after the last return
         """,
             options=options,
         )
@@ -57,16 +55,27 @@ class DREFUN:
             Callable: Generated reward function
         """
         prompt = f"""
-        Generate a reward function for a {self.env.spec.name} environment.
+        Complete the reward function for a {self.env.spec.name} environment.
         Task Description: {task_description}
-        
-        Requirements:
-        - Provide clean, efficient implementation
-        - Take into the account action space
-        """  # TODO better prompt with completion of the function
+
+        complete this sentence:
+        def reward_func(observations:np.ndarray, terminated: bool, truncated: bool) -> float:
+            \"\"\"Reward function for {self.env.spec.name}
+
+            Args:
+                observations (np.ndarray): observation on the current state
+                terminated (bool): episode is terminated due a failure
+                truncated (bool): episode is truncated due a success
+
+            Returns:
+                float: The reward for the current step
+            \"\"\"
+            
+        """
 
         self.llm.add_message(prompt)
         response = self.llm.generate_response()  # TODO generate 2 responses
+        logger.debug(response)
         response = self._get_code(response)
         reward_func = self._get_runnable_function(response)
         self.reward_functions.append(reward_func)
@@ -91,10 +100,12 @@ class DREFUN:
             reward_func = self._compile_reward_function(response)
             state, _ = self.env.reset()
             action = self.learning_method.output(state)
+            next_observation, _ , terminated, truncated, _ = self.env.step(action)
             self._test_reward_function(
                 reward_func,
-                observation=state,
-                action=action,
+                observations=next_observation,
+                terminated=terminated,
+                truncated=truncated,
             )
         except SyntaxError as e:
             logger.warning(f"Error syntax {e}")
@@ -177,7 +188,7 @@ class DREFUN:
         self,
         objectives_metrics: List[callable] = [],
         num_episodes: int = 100,
-        visual: bool = False,  # TODO utiliser lles parametre
+        visual: bool = False,  # TODO utiliser les parametre
     ) -> Dict:
         """
         Evaluate policy performance for a given reward function
@@ -235,7 +246,7 @@ class DREFUN:
                     action
                 )
                 if reward_func is not None:
-                    reward = reward_func(next_observation, action)
+                    reward = reward_func(next_observation, terminated, truncated)
                 total_reward += reward
                 state = next_observation
                 all_states.append(state)

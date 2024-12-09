@@ -328,3 +328,983 @@ def lunarlander_reward(observation, action, done=False):
 - and during the test: SR 0.0
 
 
+13:38:05 OllamaChat.py:30 INFO
+	System: 
+        You are an expert in Reinforcement Learning specialized in designing reward functions.
+        Strict criteria:
+        - Provide dependancy if needed
+        - Provide ONLY the reward function code
+        - Use Python format
+        - Briefly comment on the function's logic
+        - Give no additional explanations
+        - Focus on the Gymnasium environment 
+        - Take into the action space
+        - STOP immediately after closing the ``` code block
+        
+
+13:38:30 OllamaChat.py:30 INFO
+	System: 
+        You are an expert in Reinforcement Learning specialized in designing reward functions.
+        Strict criteria:
+        - Provide dependancy if needed
+        - Provide ONLY the reward function code
+        - Use Python format
+        - Briefly comment on the function's logic
+        - Give no additional explanations
+        - Focus on the Gymnasium environment 
+        - Take into the action space
+        - STOP immediately after closing the ``` code block
+        
+
+13:38:45 OllamaChat.py:30 INFO
+	System: 
+        You are an expert in Reinforcement Learning specialized in designing reward functions.
+        Strict criteria:
+        - Provide dependancy if needed
+        - Provide ONLY the reward function code
+        - Use Python format
+        - Briefly comment on the function's logic
+        - Give no additional explanations
+        - Focus on the Gymnasium environment 
+        - Take into the action space
+        - STOP immediately after closing the ``` code block
+        
+
+13:39:15 OllamaChat.py:30 INFO
+	System: 
+        You are an expert in Reinforcement Learning specialized in designing reward functions.
+        Strict criteria:
+        - Provide dependancy if needed
+        - Provide ONLY the reward function code
+        - Use Python format
+        - Briefly comment on the function's logic
+        - Give no additional explanations
+        - Focus on the Gymnasium environment 
+        - Take into the action space
+        - STOP immediately after closing the ``` code block
+        
+
+13:59:33 OllamaChat.py:30 INFO
+	System: 
+        You are an expert in Reinforcement Learning specialized in designing reward functions.
+        Strict criteria:
+        - Provide dependancy if needed
+        - Provide ONLY the reward function code
+        - Use Python format
+        - Briefly comment on the function's logic
+        - Give no additional explanations
+        - Focus on the Gymnasium environment 
+        - Take into the observation of the state, the terminated and truncated boolean 
+        - STOP immediately after closing the ``` code block
+        
+
+14:00:07 DREFUN.py:82 INFO
+	Code nettoyé pour compilation :
+import numpy as np
+
+def reward_func(observation, terminated, truncated) -> float:
+    # Extract relevant observations
+    cart_position = observation[0]
+    pole_angle = observation[2]
+
+    # Default reward if not terminated or truncated
+    reward = 1.0
+
+    # Penalize for moving too far from the center of the track
+    if abs(cart_position) > 1.0:
+        reward -= 0.5
+
+    # Penalize for large pole angles (i.e., pole is not upright)
+    if abs(pole_angle) > np.deg2rad(15):
+        reward -= 0.5
+
+    # Penalize more heavily if the episode is terminated
+    if terminated or truncated:
+        reward -= 10.0
+
+    return reward
+
+14:00:07 DREFUN.py:103 WARNING
+	Error execution Error during reward function execution: reward_func() got an unexpected keyword argument 'action'
+
+14:01:04 DREFUN.py:82 INFO
+	Code nettoyé pour compilation :
+You are correct that the provided reward function does not accept an `action` argument, which is likely required by the Gymnasium environment. Here’s a corrected version of the reward function that includes the `action` parameter:
+
+```
+import numpy as np
+
+def reward_func(observation, action, terminated, truncated) -> float:
+    # Extract relevant observations
+    cart_position = observation[0]
+    pole_angle = observation[2]
+
+    # Default reward if not terminated or truncated
+    reward = 1.0
+
+    # Penalize for moving too far from the center of the track
+    if abs(cart_position) > 1.0:
+        reward -= 0.5
+
+    # Penalize for large pole angles (i.e., pole is not upright)
+    if abs(pole_angle) > np.deg2rad(15):
+        reward -= 0.5
+
+    # Penalize more heavily if the episode is terminated
+    if terminated or truncated:
+        reward -= 10.0
+
+    return reward
+```
+
+This function now accepts an `action` parameter, which should be included when calling the reward function within your Gymnasium environment loop.
+
+14:01:04 DREFUN.py:100 WARNING
+	Error syntax Syntax error in the generated code : invalid character '’' (U+2019) (<string>, line 1)
+
+14:01:31 OllamaChat.py:30 INFO
+	System: 
+        You are an expert in Reinforcement Learning specialized in designing reward functions.
+        Strict criteria:
+        - Provide dependancy if needed
+        - Provide ONLY the reward function code
+        - Use Python format
+        - Briefly comment on the function's logic
+        - Give no additional explanations
+        - Focus on the Gymnasium environment 
+        - Take into the observation of the state, the terminated and truncated boolean 
+        - STOP immediately after closing the ``` code block
+        
+
+14:01:50 DREFUN.py:82 INFO
+	Code nettoyé pour compilation :
+def reward_func(observation, terminated, truncated) -> float:
+    """
+    Reward function for the LunarLander environment.
+    
+    Args:
+    observation (np.ndarray): The current state of the environment.
+    terminated (bool): Whether the episode has terminated.
+    truncated (bool): Whether the episode has been truncated.
+
+    Returns:
+    float: The reward for the current step.
+    """
+    if terminated or truncated:
+        return -100
+    else:
+        return 1
+
+14:01:50 DREFUN.py:103 WARNING
+	Error execution Error during reward function execution: reward_func() got an unexpected keyword argument 'action'
+
+14:05:11 OllamaChat.py:30 INFO
+	System: 
+        You are an expert in Reinforcement Learning specialized in designing reward functions.
+        Strict criteria:
+        - Provide dependancy if needed
+        - Provide ONLY the reward function code
+        - Use Python format
+        - Briefly comment on the function's logic
+        - Give no additional explanations
+        - Focus on the Gymnasium environment 
+        - Take into the observation of the state, the terminated and truncated boolean 
+        - STOP immediately after closing the ``` code block
+        
+
+14:05:34 DREFUN.py:82 INFO
+	Code nettoyé pour compilation :
+def reward_func(observations, terminated, truncated) -> float:
+    # If the episode has terminated or been truncated, return a negative reward
+    if terminated or truncated:
+        return -10.0
+    
+    # Otherwise, return a small positive reward for each step taken
+    return 0.1
+```
+This reward function assigns a negative reward of -10.0 when the episode terminates (either by success or failure) and a small positive reward of 0.1 for every step taken towards keeping the pole upright. This encourages the agent to continue interacting with the environment for as long as possible while balancing the pole.
+
+14:05:34 DREFUN.py:102 WARNING
+	Error syntax Syntax error in the generated code : invalid syntax (<string>, line 8)
+
+14:05:50 DREFUN.py:82 INFO
+	Code nettoyé pour compilation :
+def reward_func(observations, terminated, truncated) -> float:
+    # If the episode has terminated or been truncated, return a negative reward
+    if terminated or truncated:
+        return -10.0
+    
+    # Otherwise, return a small positive reward for each step taken
+    return 0.1
+
+14:06:47 OllamaChat.py:30 INFO
+	System: 
+        You are an expert in Reinforcement Learning specialized in designing reward functions.
+        Strict criteria:
+        - Provide dependancy if needed
+        - Provide ONLY the reward function code
+        - Use Python format
+        - Briefly comment on the function's logic
+        - Give no additional explanations
+        - Focus on the Gymnasium environment 
+        - Take into the observation of the state, the terminated and truncated boolean 
+        - STOP immediately after closing the ``` code block
+        
+
+14:07:07 DREFUN.py:82 INFO
+	Code nettoyé pour compilation :
+def reward_func(observation: np.ndarray, terminated: bool, truncated: bool) -> float:
+    # Base reward for each step taken
+    reward = 1.0
+    
+    # Penalize if the episode is terminated or truncated
+    if terminated or truncated:
+        reward -= 500.0
+    
+    return reward
+```
+This reward function provides a base reward of +1 for every step taken in the environment. If the episode is terminated or truncated, a penalty of -500 is applied to discourage premature termination.
+
+14:07:07 DREFUN.py:102 WARNING
+	Error syntax Syntax error in the generated code : invalid syntax (<string>, line 10)
+
+14:07:33 DREFUN.py:82 INFO
+	Code nettoyé pour compilation :
+def reward_func(observation: np.ndarray, terminated: bool, truncated: bool) -> float:
+    # Base reward for each step taken
+    reward = 1.0
+    
+    # Penalize if the episode is terminated or truncated
+    if terminated or truncated:
+        reward -= 500.0
+    
+    return reward
+```
+This reward function provides a base reward of +1 for every step taken in the environment. If the episode is terminated or truncated, a penalty of -500 is applied to discourage premature termination.
+
+14:07:33 DREFUN.py:102 WARNING
+	Error syntax Syntax error in the generated code : invalid syntax (<string>, line 10)
+
+14:07:36 OllamaChat.py:30 INFO
+	System: 
+        You are an expert in Reinforcement Learning specialized in designing reward functions.
+        Strict criteria:
+        - Provide dependancy if needed
+        - Provide ONLY the reward function code
+        - Use Python format
+        - Briefly comment on the function's logic
+        - Give no additional explanations
+        - Focus on the Gymnasium environment 
+        - Take into the observation of the state, the terminated and truncated boolean
+        
+
+14:08:07 DREFUN.py:81 INFO
+	Code nettoyé pour compilation :
+def reward_func(observation, terminated, truncated) -> float:
+    # Reward is +1 for every step taken
+    reward = 1.0
+    
+    # If the episode terminates or truncates, set a negative reward
+    if terminated or truncated:
+        reward = -1.0
+        
+    return reward
+```
+
+### Explanation:
+- **Reward for Steps**: The function gives a reward of +1 for every step taken by the agent.
+- **Termination and Truncation**: If the episode terminates (pole falls off) or is truncated (episode reaches a maximum length), the reward is set to -1, indicating an unsuccessful outcome.
+
+14:08:07 DREFUN.py:101 WARNING
+	Error syntax Syntax error in the generated code : invalid syntax (<string>, line 10)
+
+14:08:38 OllamaChat.py:30 INFO
+	System: 
+        You are an expert in Reinforcement Learning specialized in designing reward functions.
+        Strict criteria:
+        - Provide dependancy if needed
+        - Provide ONLY the reward function code
+        - Use Python format
+        - Briefly comment on the function's logic
+        - Give no additional explanations
+        - Focus on the Gymnasium environment 
+        - Take into the observation of the state, the terminated and truncated boolean
+        
+
+14:10:22 DREFUN.py:81 INFO
+	Code nettoyé pour compilation :
+```python
+def reward_func(observations, terminated, truncated):
+    """
+    Reward function for LunarLander environment.
+    
+    Arguments:
+    observations -- Current state of the environment (list or array)
+    terminated -- Boolean indicating if the episode has terminated
+    truncated -- Boolean indicating if the episode was truncated
+    
+    Returns:
+    float -- The reward for the current step
+    """
+    # Extract the pole angle from the observation
+    pole_angle = observations[2]
+    
+    # Define the reward threshold (v1)
+    reward_threshold = 500.0
+    
+    # Default reward for each step taken
+    reward = 1.0
+    
+    # Penalize if the pole is tipped over
+    if abs(pole_angle) > 0.418:
+        reward -= 2.0
+    
+    # If the episode terminated, check if it was successful based on the threshold
+    if terminated:
+        if observations[0] >= -1.2 and observations[0] <= 1.2 and observations[1] ** 2 <= 0.045 and abs(pole_angle) < 0.0872665:
+            reward = reward_threshold
+        else:
+            reward -= 100.0
+    
+    # Penalize if the episode was truncated
+    if truncated:
+        reward -= 10.0
+    
+    return reward
+```
+
+### Logic Explanation:
+- **Reward Calculation**: The function starts by setting a default reward of `+1` for each step taken.
+- **Pole Angle Penalty**: If the pole angle exceeds ±24°, a penalty of `-2` is applied to discourage the pole from tipping over.
+- **Termination Check**: If the episode terminates, it checks if the cart's position and velocity are within acceptable limits (within -1.2 to 1.2 for horizontal position and less than or equal to 0.045 for vertical velocity) and if the pole angle is less than ±5°. If these conditions are met, the reward is set to `500`, indicating a successful landing. Otherwise, a penalty of `-100` is applied.
+- **Truncated Episode**: If the episode is truncated (e.g., due to reaching a time limit), a penalty of `-10` is applied.
+
+This function aims to encourage the agent to keep the pole upright for as long as possible while penalizing unfavorable states and terminating episodes that do not meet success criteria.
+
+14:10:22 DREFUN.py:101 WARNING
+	Error syntax Syntax error in the generated code : invalid character '±' (U+00B1) (<string>, line 43)
+
+14:21:10 OllamaChat.py:30 INFO
+	System: 
+        You are an expert in Reinforcement Learning specialized in designing reward functions.
+        Strict criteria:
+        - Provide dependancy if needed
+        - Provide ONLY the reward function code
+        - Use Python format
+        - Briefly comment on the function's logic
+        - Give no additional explanations
+        - Focus on the Gymnasium environment 
+        - Take into the observation of the state, the terminated and truncated boolean
+        
+
+14:21:55 DREFUN.py:93 INFO
+	Code nettoyé pour compilation :
+def reward_func(observations, terminated, truncated) -> float:
+    """Reward function for LunarLander
+
+    Args:
+        observations (): observation on the current state
+        terminated (bool): episode is terminated due a failure
+        truncated (bool): episode is truncated due a success
+
+    Returns:
+        float: The reward for the current step
+    """
+    # Reward +1 for every step taken, including the termination step
+    reward = 1.0
+    
+    # Penalize if the episode terminates or is truncated
+    if terminated or truncated:
+        reward -= 100.0
+    
+    return reward
+```
+
+**Comment:** This reward function provides a simple positive reward for each step taken in the environment. It penalizes the agent by subtracting 100 points if the episode terminates or gets truncated, which helps to encourage the agent to avoid failure and continue the episode as long as possible.
+
+14:21:55 DREFUN.py:113 WARNING
+	Error syntax Syntax error in the generated code : invalid syntax (<string>, line 20)
+
+14:22:46 DREFUN.py:93 INFO
+	Code nettoyé pour compilation :
+My apologies for that oversight. The code should use parentheses instead of square brackets when defining the function arguments in Python. Here is the corrected version:
+
+```
+def reward_func(observations, terminated, truncated) -> float:
+    """Reward function for LunarLander
+
+    Args:
+        observations: observation on the current state
+        terminated (bool): episode is terminated due a failure
+        truncated (bool): episode is truncated due to a success
+
+    Returns:
+        float: The reward for the current step
+    """
+    # Reward +1 for every step taken, including the termination step
+    reward = 1.0
+    
+    # Penalize if the episode terminates or is truncated
+    if terminated or truncated:
+        reward -= 100.0
+    
+    return reward
+```
+
+**Comment:** This reward function provides a simple positive reward for each step taken in the environment. It penalizes the agent by subtracting 100 points if the episode terminates or gets truncated, which helps to encourage the agent to avoid failure and continue the episode as long as possible.
+
+14:22:46 DREFUN.py:113 WARNING
+	Error syntax Syntax error in the generated code : invalid syntax (<string>, line 1)
+
+14:23:47 DREFUN.py:93 INFO
+	Code nettoyé pour compilation :
+I apologize for the confusion. The issue seems to be with the function signature not being properly formatted in the initial response. Here is the corrected version of the reward function:
+
+```
+def reward_func(observations, terminated, truncated) -> float:
+    """Reward function for LunarLander
+
+    Args:
+        observations: observation on the current state
+        terminated (bool): episode is terminated due a failure
+        truncated (bool): episode is truncated due to a success
+
+    Returns:
+        float: The reward for the current step
+    """
+    # Reward +1 for every step taken, including the termination step
+    reward = 1.0
+    
+    # Penalize if the episode terminates or is truncated
+    if terminated or truncated:
+        reward -= 100.0
+    
+    return reward
+```
+
+**Comment:** This reward function provides a simple positive reward for each step taken in the environment. It penalizes the agent by subtracting 100 points if the episode terminates or gets truncated, which helps to encourage the agent to avoid failure and continue the episode as long as possible.
+
+14:23:47 DREFUN.py:113 WARNING
+	Error syntax Syntax error in the generated code : invalid syntax (<string>, line 1)
+
+14:24:56 DREFUN.py:93 INFO
+	Code nettoyé pour compilation :
+I apologize for the confusion. The issue seems to be with the function signature not being properly formatted in the initial response. Here is the corrected version of the reward function:
+
+```
+def reward_func(observations, terminated, truncated) -> float:
+    """Reward function for LunarLander
+
+    Args:
+        observations: observation on the current state
+        terminated (bool): episode is terminated due a failure
+        truncated (bool): episode is truncated due to a success
+
+    Returns:
+        float: The reward for the current step
+    """
+    # Reward +1 for every step taken, including the termination step
+    reward = 1.0
+    
+    # Penalize if the episode terminates or is truncated
+    if terminated or truncated:
+        reward -= 100.0
+    
+    return reward
+```
+
+**Comment:** This reward function provides a simple positive reward for each step taken in the environment. It penalizes the agent by subtracting 100 points if the episode terminates or gets truncated, which helps to encourage the agent to avoid failure and continue the episode as long as possible.
+
+14:24:56 DREFUN.py:113 WARNING
+	Error syntax Syntax error in the generated code : invalid syntax (<string>, line 1)
+
+14:26:05 DREFUN.py:93 INFO
+	Code nettoyé pour compilation :
+I apologize for any confusion. It appears there might be an issue with the format of my initial response. Let's try again:
+
+```
+def reward_func(observations, terminated, truncated) -> float:
+    """Reward function for LunarLander
+
+    Args:
+        observations: observation on the current state
+        terminated (bool): episode is terminated due a failure
+        truncated (bool): episode is truncated due to a success
+
+    Returns:
+        float: The reward for the current step
+    """
+    # Reward +1 for every step taken, including the termination step
+    reward = 1.0
+    
+    # Penalize if the episode terminates or is truncated
+    if terminated or truncated:
+        reward -= 100.0
+    
+    return reward
+```
+
+**Comment:** This reward function provides a simple positive reward for each step taken in the environment. It penalizes the agent by subtracting 100 points if the episode terminates or gets truncated, which helps to encourage the agent to avoid failure and continue the episode as long as possible.
+
+14:26:05 DREFUN.py:113 WARNING
+	Error syntax Syntax error in the generated code : unterminated string literal (detected at line 1) (<string>, line 1)
+
+14:27:21 DREFUN.py:93 INFO
+	Code nettoyé pour compilation :
+My apologies for the formatting issue. Here is a corrected version of the reward function:
+
+```
+def reward_func(observations, terminated, truncated) -> float:
+    """Reward function for LunarLander
+
+    Args:
+        observations: observation on the current state
+        terminated (bool): episode is terminated due a failure
+        truncated (bool): episode is truncated due to a success
+
+    Returns:
+        float: The reward for the current step
+    """
+    # Reward +1 for every step taken, including the termination step
+    reward = 1.0
+    
+    # Penalize if the episode terminates or is truncated
+    if terminated or truncated:
+        reward -= 100.0
+    
+    return reward
+```
+
+**Comment:** This reward function provides a simple positive reward for each step taken in the environment. It penalizes the agent by subtracting 100 points if the episode terminates or gets truncated, which helps to encourage the agent to avoid failure and continue the episode as long as possible.
+
+14:27:21 DREFUN.py:113 WARNING
+	Error syntax Syntax error in the generated code : invalid syntax (<string>, line 1)
+
+14:27:56 OllamaChat.py:30 INFO
+	System: 
+        You are an expert in Reinforcement Learning specialized in designing reward functions.
+        Strict criteria:
+        - Provide dependancy if needed
+        - Provide ONLY the reward function code
+        - Use Python format
+        - Briefly comment on the function's logic
+        - Give no additional explanations
+        - Focus on the Gymnasium environment 
+        - Take into the observation of the state, the terminated and truncated boolean
+        
+
+14:28:51 DREFUN.py:92 INFO
+	Code nettoyé pour compilation :
+def reward_func(observations, terminated, truncated) -> float:
+    """Reward function for LunarLander
+
+    Args:
+        observations (): observation on the current state
+        terminated (bool): episode is terminated due a failure
+        truncated (bool): episode is truncated due a success
+
+    Returns:
+        float: The reward for the current step
+    """
+    # Default reward for each step taken
+    reward = 1.0
+    
+    # If the episode is terminated or truncated, reset the reward to -100 if failed, otherwise 500
+    if terminated or truncated:
+        reward = -100.0 if not (terminated and observations[2] == 0) else 500.0
+    
+    return reward
+```
+
+**Logic:**
+- A default reward of +1 is given for each step taken.
+- If the episode terminates due to failure (i.e., cart leaves track or pole falls), a penalty of -100 is applied.
+- If the episode is terminated successfully (i.e., the pole remains upright until the end of the environment's limit, which typically happens in v1 version of LunarLander), a reward of 500 is given.
+
+14:28:51 DREFUN.py:112 WARNING
+	Error syntax Syntax error in the generated code : unterminated string literal (detected at line 25) (<string>, line 25)
+
+14:29:43 DREFUN.py:92 INFO
+	Code nettoyé pour compilation :
+It seems like there was an issue with the way the docstring was formatted. Let's correct it and ensure all elements are properly enclosed within quotes.
+
+Here is the corrected version:
+
+```
+def reward_func(observations, terminated, truncated) -> float:
+    """Reward function for LunarLander
+
+    Args:
+        observations: observation on the current state
+        terminated (bool): episode is terminated due a failure
+        truncated (bool): episode is truncated due to a success
+
+    Returns:
+        float: The reward for the current step
+    """
+    # Default reward for each step taken
+    reward = 1.0
+    
+    # If the episode is terminated or truncated, reset the reward to -100 if failed, otherwise 500
+    if terminated or truncated:
+        reward = -100.0 if not (terminated and observations[2] == 0) else 500.0
+    
+    return reward
+```
+
+This should resolve the syntax error.
+
+14:29:43 DREFUN.py:112 WARNING
+	Error syntax Syntax error in the generated code : unterminated string literal (detected at line 1) (<string>, line 1)
+
+14:30:44 DREFUN.py:92 INFO
+	Code nettoyé pour compilation :
+It appears there was an issue with how the docstring was formatted at the beginning of the function. Let's correct it and ensure all elements are properly enclosed within quotes.
+
+Here is the corrected version:
+
+```
+def reward_func(observations, terminated, truncated) -> float:
+    """Reward function for LunarLander
+
+    Args:
+        observations: observation on the current state
+        terminated (bool): episode is terminated due a failure
+        truncated (bool): episode is truncated due to a success
+
+    Returns:
+        float: The reward for the current step
+    """
+    # Default reward for each step taken
+    reward = 1.0
+    
+    # If the episode is terminated or truncated, reset the reward to -100 if failed, otherwise 500
+    if terminated or truncated:
+        reward = -100.0 if not (terminated and observations[2] == 0) else 500.0
+    
+    return reward
+```
+
+This should resolve the syntax error.
+
+14:30:44 DREFUN.py:112 WARNING
+	Error syntax Syntax error in the generated code : unterminated string literal (detected at line 1) (<string>, line 1)
+
+14:31:50 DREFUN.py:92 INFO
+	Code nettoyé pour compilation :
+It appears there is an issue with how the docstring was formatted at the beginning of the function. Let's correct it and ensure all elements are properly enclosed within quotes.
+
+Here is the corrected version:
+
+```
+def reward_func(observations, terminated, truncated) -> float:
+    """Reward function for LunarLander
+
+    Args:
+        observations: observation on the current state
+        terminated (bool): episode is terminated due a failure
+        truncated (bool): episode is truncated due to a success
+
+    Returns:
+        float: The reward for the current step
+    """
+    # Default reward for each step taken
+    reward = 1.0
+    
+    # If the episode is terminated or truncated, reset the reward to -100 if failed, otherwise 500
+    if terminated or truncated:
+        reward = -100.0 if not (terminated and observations[2] == 0) else 500.0
+    
+    return reward
+```
+
+This should resolve the syntax error.
+
+14:31:50 DREFUN.py:112 WARNING
+	Error syntax Syntax error in the generated code : unterminated string literal (detected at line 1) (<string>, line 1)
+
+14:31:56 OllamaChat.py:30 INFO
+	System: 
+        You are an expert in Reinforcement Learning specialized in designing reward functions.
+        Strict criteria:
+        - Provide dependancy if needed
+        - Complete ONLY the reward function code
+        - Use Python format
+        - Give no additional explanations
+        - Focus on the Gymnasium environment 
+        - Take into the observation of the state, the terminated and truncated boolean
+        - STOP immediately your completion after the last return
+        
+
+14:32:22 DREFUN.py:92 INFO
+	Code nettoyé pour compilation :
+def reward_func(observations, terminated, truncated) -> float:
+    """Reward function for LunarLander
+
+    Args:
+        observations (): observation on the current state
+        terminated (bool): episode is terminated due a failure
+        truncated (bool): episode is truncated due a success
+
+    Returns:
+        float: The reward for the current step
+    """
+    if terminated or truncated:
+        return -100.0
+    else:
+        return 1.0
+
+14:32:22 DREFUN.py:115 WARNING
+	Error execution Error during reward function execution: reward_func() got an unexpected keyword argument 'observation'
+
+14:32:57 OllamaChat.py:30 INFO
+	System: 
+        You are an expert in Reinforcement Learning specialized in designing reward functions.
+        Strict criteria:
+        - Provide dependancy if needed
+        - Complete ONLY the reward function code
+        - Use Python format
+        - Give no additional explanations
+        - Focus on the Gymnasium environment 
+        - Take into the observation of the state, the terminated and truncated boolean
+        - STOP immediately your completion after the last return
+        
+
+14:33:15 DREFUN.py:92 INFO
+	Code nettoyé pour compilation :
+def reward_func(observations, terminated, truncated) -> float:
+    """
+    Reward function for LunarLander
+
+    Args:
+        observations (): observation on the current state
+        terminated (bool): episode is terminated due a failure
+        truncated (bool): episode is truncated due a success
+
+    Returns:
+        float: The reward for the current step
+    """
+    if terminated or truncated:
+        return -100.0
+    else:
+        return 1.0
+
+14:34:21 OllamaChat.py:30 INFO
+	System: 
+        You are an expert in Reinforcement Learning specialized in designing reward functions.
+        Strict criteria:
+        - Provide dependancy if needed
+        - Complete ONLY the reward function code
+        - Use Python format
+        - Give no additional explanations
+        - Focus on the Gymnasium environment 
+        - Take into the observation of the state, the terminated and truncated boolean
+        - STOP immediately your completion after the last return
+        
+
+14:34:43 DREFUN.py:92 INFO
+	Code nettoyé pour compilation :
+import numpy as np
+
+def reward_func(observations:np.ndarray, terminated: bool, truncated: bool) -> float:
+    """Reward function for LunarLander
+
+    Args:
+        observations (np.ndarray): observation on the current state
+        terminated (bool): episode is terminated due a failure
+        truncated (bool): episode is truncated due a success
+
+    Returns:
+        float: The reward for the current step
+    """
+    if terminated or truncated:
+        return -100
+    else:
+        return 1.0
+
+14:35:49 OllamaChat.py:30 INFO
+	System: 
+        You are an expert in Reinforcement Learning specialized in designing reward functions.
+        Strict criteria:
+        - Complete ONLY the reward function code
+        - Use Python format
+        - Give no additional explanations
+        - Focus on the Gymnasium environment 
+        - Take into the observation of the state, the terminated and truncated boolean
+        - STOP immediately your completion after the last return
+        
+
+14:36:17 DREFUN.py:91 INFO
+	Code nettoyé pour compilation :
+import numpy as np
+
+def reward_func(observations:np.ndarray, terminated: bool, truncated: bool) -> float:
+    """Reward function for LunarLander
+
+    Args:
+        observations (np.ndarray): observation on the current state
+        terminated (bool): episode is terminated due a failure
+        truncated (bool): episode is truncated due a success
+
+    Returns:
+        float: The reward for the current step
+    """
+    if terminated or truncated:
+        return -100.0
+    else:
+        pole_angle = observations[2]
+        reward = 1.0 - abs(pole_angle)
+        return reward
+
+14:37:18 DREFUN.py:217 INFO
+	the policy with human reward:
+- during the train: SR 0.0, nb_ep 5000
+- and during the test: SR 0.0
+
+
+14:37:18 DREFUN.py:222 INFO
+	the policy with llm reward:
+- during the train: SR 0.0226, nb_ep 5000
+- and during the test: SR 0.0
+
+
+14:38:40 OllamaChat.py:30 INFO
+	System: 
+        You are an expert in Reinforcement Learning specialized in designing reward functions.
+        Strict criteria:
+        - Complete ONLY the reward function code
+        - Use Python format
+        - Give no additional explanations
+        - Focus on the Gymnasium environment 
+        - Take into the observation of the state, the terminated and truncated boolean
+        - STOP immediately your completion after the last return
+        
+
+14:39:04 DREFUN.py:91 INFO
+	Code nettoyé pour compilation :
+import numpy as np
+
+def reward_func(observations:np.ndarray, terminated: bool, truncated: bool) -> float:
+    """Reward function for LunarLander
+
+    Args:
+        observations (np.ndarray): observation on the current state
+        terminated (bool): episode is terminated due a failure
+        truncated (bool): episode is truncated due a success
+
+    Returns:
+        float: The reward for the current step
+    """
+    if terminated or truncated:
+        return -100.0
+    else:
+        return 1.0
+
+14:39:51 DREFUN.py:217 INFO
+	the policy with human reward:
+- during the train: SR 0.0, nb_ep 5000
+- and during the test: SR 0.0
+
+
+14:39:51 DREFUN.py:222 INFO
+	the policy with llm reward:
+- during the train: SR 0.0, nb_ep 5000
+- and during the test: SR 0.0
+
+
+14:41:04 OllamaChat.py:30 INFO
+	System: 
+        You are an expert in Reinforcement Learning specialized in designing reward functions.
+        Strict criteria:
+        - Complete ONLY the reward function code
+        - Use Python format
+        - Give no additional explanations
+        - Focus on the Gymnasium environment 
+        - Take into the observation of the state, the terminated and truncated boolean
+        - STOP immediately your completion after the last return
+        
+
+14:41:12 OllamaChat.py:30 INFO
+	System: 
+        You are an expert in Reinforcement Learning specialized in designing reward functions.
+        Strict criteria:
+        - Complete ONLY the reward function code
+        - Use Python format
+        - Give no additional explanations
+        - Focus on the Gymnasium environment 
+        - Take into the observation of the state, the terminated and truncated boolean
+        - STOP immediately your completion after the last return
+        
+
+14:41:32 DREFUN.py:91 INFO
+	Code nettoyé pour compilation :
+def reward_func(observations: np.ndarray, terminated: bool, truncated: bool) -> float:
+    """Reward function for CartPole
+
+    Args:
+        observations (np.ndarray): observation on the current state
+        terminated (bool): episode is terminated due a failure
+        truncated (bool): episode is truncated due a success
+
+    Returns:
+        float: The reward for the current step
+    """
+    if terminated or truncated:
+        return 0.0
+    else:
+        return 1.0
+
+14:41:45 DREFUN.py:217 INFO
+	the policy with human reward:
+- during the train: SR 0.049, nb_ep 5000
+- and during the test: SR 0.0
+
+
+14:41:45 DREFUN.py:222 INFO
+	the policy with llm reward:
+- during the train: SR 0.0002, nb_ep 5000
+- and during the test: SR 0.0
+
+
+14:41:53 OllamaChat.py:30 INFO
+	System: 
+        You are an expert in Reinforcement Learning specialized in designing reward functions.
+        Strict criteria:
+        - Complete ONLY the reward function code
+        - Use Python format
+        - Give no additional explanations
+        - Focus on the Gymnasium environment 
+        - Take into the observation of the state, the terminated and truncated boolean
+        - STOP immediately your completion after the last return
+        
+
+14:42:18 DREFUN.py:91 INFO
+	Code nettoyé pour compilation :
+def reward_func(observations:np.ndarray, terminated: bool, truncated: bool) -> float:
+    """Reward function for CartPole
+
+    Args:
+        observations (np.ndarray): observation on the current state
+        terminated (bool): episode is terminated due a failure
+        truncated (bool): episode is truncated due a success
+
+    Returns:
+        float: The reward for the current step
+    """
+    if terminated or truncated:
+        return -1.0  # Penalize termination and truncation
+    else:
+        return +1.0  # Reward for each step taken
+
+14:42:22 DREFUN.py:217 INFO
+	the policy with human reward:
+- during the train: SR 0.0, nb_ep 5000
+- and during the test: SR 0.0
+
+
+14:42:22 DREFUN.py:222 INFO
+	the policy with llm reward:
+- during the train: SR 0.04775687409551375, nb_ep 691
+- and during the test: SR 1.0
+
+
