@@ -95,7 +95,6 @@ class OllamaChat:
                             json_response = json.loads(line.decode('utf-8'))
                             if 'message' in json_response:
                                 chunk = json_response['message'].get('content', '')
-                                print(chunk)
                                 full_response += chunk
                                 yield chunk
                         except json.JSONDecodeError:
@@ -109,6 +108,25 @@ class OllamaChat:
         except requests.exceptions.RequestException as e:
             logger.error(f"Connection error: {e}")
             return ""
+        
+
+    def print_Generator_and_return(
+            self, 
+            response: Generator | str):
+        """
+        Print the response if it's a generator
+        Args:
+            response (Generator | str): the response to print
+        Returns:
+            - the response formalized if is was a generator, the response itself otherwise.
+        """
+        if isinstance(response, Generator):
+            response_gen = response
+            response = ""
+            for chunk in response_gen:
+                print(chunk, end='', flush=True)
+                response += chunk
+        return response
 
 def main():
     chat = OllamaChat(
