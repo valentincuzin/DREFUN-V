@@ -1826,3 +1826,365 @@ def custom_reward_function(observation, action):
 - and during the test: SR 1.0
 
 
+14:38:52 OllamaChat.py:30 INFO
+	System: 
+        You are an expert in Reinforcement Learning specialized in designing reward functions.
+        Strict criteria:
+        - Provide dependancy if needed
+        - Provide ONLY the reward function code
+        - Use Python format
+        - Briefly comment on the function's logic
+        - Give no additional explanations
+        - Focus on the Gymnasium environment 
+        - Take into the action space
+        - STOP immediately after closing the ``` code block
+        
+
+14:38:58 DREFUN.py:84 INFO
+	Code nettoyé pour compilation :
+def custom_reward(observation):
+    # observation[2] represents the pole angle
+    # A negative reward for each degree the pole deviates from being vertical (0 radians)
+    pole_angle = observation[2]
+    reward = 1.0 - abs(pole_angle / 0.418)  # Assuming the range is ±45 degrees
+    return max(reward, 0)  # Ensure the reward does not go below 0
+
+14:38:58 DREFUN.py:106 WARNING
+	Error execution Error during reward function execution: custom_reward() got an unexpected keyword argument 'action'
+
+14:38:59 DREFUN.py:84 INFO
+	Code nettoyé pour compilation :
+def custom_reward(observation):
+    pole_angle = observation[2]
+    reward = 1.0 - abs(pole_angle / 0.418)
+    return max(reward, 0)
+
+14:38:59 DREFUN.py:106 WARNING
+	Error execution Error during reward function execution: custom_reward() got an unexpected keyword argument 'action'
+
+14:39:00 DREFUN.py:84 INFO
+	Code nettoyé pour compilation :
+def custom_reward(observation):
+    pole_angle = observation[2]
+    reward = 1.0 - abs(pole_angle / 0.418)
+    return max(reward, 0)
+
+14:39:00 DREFUN.py:106 WARNING
+	Error execution Error during reward function execution: custom_reward() got an unexpected keyword argument 'action'
+
+14:39:01 DREFUN.py:84 INFO
+	Code nettoyé pour compilation :
+def custom_reward(observation):
+    pole_angle = observation[2]
+    reward = 1.0 - abs(pole_angle / 0.418)
+    return max(reward, 0)
+
+14:39:01 DREFUN.py:106 WARNING
+	Error execution Error during reward function execution: custom_reward() got an unexpected keyword argument 'action'
+
+14:39:02 DREFUN.py:84 INFO
+	Code nettoyé pour compilation :
+def custom_reward(observation):
+    pole_angle = observation[2]
+    reward = 1.0 - abs(pole_angle / 0.418)
+    return max(reward, 0)
+
+14:39:02 DREFUN.py:106 WARNING
+	Error execution Error during reward function execution: custom_reward() got an unexpected keyword argument 'action'
+
+14:39:04 DREFUN.py:84 INFO
+	Code nettoyé pour compilation :
+def custom_reward(observation):
+    pole_angle = observation[2]
+    reward = 1.0 - abs(pole_angle / 0.418)
+    return max(reward, 0)
+
+14:39:04 DREFUN.py:106 WARNING
+	Error execution Error during reward function execution: custom_reward() got an unexpected keyword argument 'action'
+
+14:39:05 DREFUN.py:84 INFO
+	Code nettoyé pour compilation :
+def custom_reward(observation):
+    pole_angle = observation[2]
+    reward = 1.0 - abs(pole_angle / 0.418)
+    return max(reward, 0)
+
+14:39:05 DREFUN.py:106 WARNING
+	Error execution Error during reward function execution: custom_reward() got an unexpected keyword argument 'action'
+
+14:39:07 DREFUN.py:84 INFO
+	Code nettoyé pour compilation :
+def custom_reward(observation):
+    pole_angle = observation[2]
+    reward = 1.0 - abs(pole_angle / 0.418)
+    return max(reward, 0)
+
+14:39:07 DREFUN.py:106 WARNING
+	Error execution Error during reward function execution: custom_reward() got an unexpected keyword argument 'action'
+
+14:39:08 DREFUN.py:84 INFO
+	Code nettoyé pour compilation :
+def custom_reward(observation):
+    pole_angle = observation[2]
+    reward = 1.0 - abs(pole_angle / 0.418)
+    return max(reward, 0)
+
+14:39:08 DREFUN.py:106 WARNING
+	Error execution Error during reward function execution: custom_reward() got an unexpected keyword argument 'action'
+
+14:39:10 DREFUN.py:84 INFO
+	Code nettoyé pour compilation :
+def custom_reward(observation):
+    pole_angle = observation[2]
+    reward = 1.0 - abs(pole_angle / 0.418)
+    return max(reward, 0)
+
+14:39:10 DREFUN.py:106 WARNING
+	Error execution Error during reward function execution: custom_reward() got an unexpected keyword argument 'action'
+
+14:39:12 DREFUN.py:84 INFO
+	Code nettoyé pour compilation :
+def custom_reward(observation):
+    pole_angle = observation[2]
+    reward = 1.0 - abs(pole_angle / 0.418)
+    return max(reward, 0)
+
+14:39:12 DREFUN.py:106 WARNING
+	Error execution Error during reward function execution: custom_reward() got an unexpected keyword argument 'action'
+
+14:39:13 DREFUN.py:84 INFO
+	Code nettoyé pour compilation :
+def custom_reward(observation):
+    pole_angle = observation[2]
+    reward = 1.0 - abs(pole_angle / 0.418)
+    return max(reward, 0)
+
+14:39:13 DREFUN.py:106 WARNING
+	Error execution Error during reward function execution: custom_reward() got an unexpected keyword argument 'action'
+
+14:39:15 DREFUN.py:84 INFO
+	Code nettoyé pour compilation :
+def custom_reward(observation):
+    pole_angle = observation[2]
+    reward = 1.0 - abs(pole_angle / 0.418)
+    return max(reward, 0)
+
+14:39:15 DREFUN.py:106 WARNING
+	Error execution Error during reward function execution: custom_reward() got an unexpected keyword argument 'action'
+
+14:39:17 DREFUN.py:84 INFO
+	Code nettoyé pour compilation :
+def custom_reward(observation):
+    pole_angle = observation[2]
+    reward = 1.0 - abs(pole_angle / 0.418)
+    return max(reward, 0)
+
+14:39:17 DREFUN.py:106 WARNING
+	Error execution Error during reward function execution: custom_reward() got an unexpected keyword argument 'action'
+
+14:39:20 DREFUN.py:84 INFO
+	Code nettoyé pour compilation :
+def custom_reward(observation):
+    pole_angle = observation[2]
+    reward = 1.0 - abs(pole_angle / 0.418)
+    return max(reward, 0)
+
+14:39:20 DREFUN.py:106 WARNING
+	Error execution Error during reward function execution: custom_reward() got an unexpected keyword argument 'action'
+
+14:39:22 DREFUN.py:84 INFO
+	Code nettoyé pour compilation :
+def custom_reward(observation):
+    pole_angle = observation[2]
+    reward = 1.0 - abs(pole_angle / 0.418)
+    return max(reward, 0)
+
+14:39:22 DREFUN.py:106 WARNING
+	Error execution Error during reward function execution: custom_reward() got an unexpected keyword argument 'action'
+
+14:39:24 DREFUN.py:84 INFO
+	Code nettoyé pour compilation :
+def custom_reward(observation):
+    pole_angle = observation[2]
+    reward = 1.0 - abs(pole_angle / 0.418)
+    return max(reward, 0)
+
+14:39:24 DREFUN.py:106 WARNING
+	Error execution Error during reward function execution: custom_reward() got an unexpected keyword argument 'action'
+
+14:39:39 OllamaChat.py:30 INFO
+	System: 
+        You are an expert in Reinforcement Learning specialized in designing reward functions.
+        Strict criteria:
+        - Provide dependancy if needed
+        - Provide ONLY the reward function code
+        - Use Python format
+        - Briefly comment on the function's logic
+        - Give no additional explanations
+        - Focus on the Gymnasium environment 
+        - Take into the action space
+        - STOP immediately after closing the ``` code block
+        
+
+14:39:43 DREFUN.py:84 INFO
+	Code nettoyé pour compilation :
+import numpy as np
+
+def cartpole_reward(observation, action):
+    """
+    Reward function for the CartPole environment.
+    
+    Args:
+    observation (np.array): The current state of the environment.
+    action (int): The action taken by the agent.
+    
+    Returns:
+    float: The reward received for the given state-action pair.
+    """
+    # Extract relevant observations
+    cart_position, _, pole_angle, _ = observation
+    
+    # Define thresholds for rewards and penalties
+    max_pole_angle = np.deg2rad(15)  # Pole angle threshold in radians (15 degrees)
+    
+    # Reward if the pole is within the acceptable angle
+    if abs(pole_angle) < max_pole_angle:
+        reward = 1.0
+    else:
+        reward = -1.0
+    
+    return reward
+
+14:39:48 DREFUN.py:218 INFO
+	pole_angle_diff : human 0.09576115915191266 llm 0.08987669866392617
+
+14:39:48 DREFUN.py:218 INFO
+	pole_position_diff : human 0.05211253923861566 llm 0.03404560226810925
+
+14:39:48 DREFUN.py:222 INFO
+	the policy with human reward:
+- during the train: SR 0.0064, nb_ep 5000
+- and during the test: SR 0.0
+
+
+14:39:48 DREFUN.py:227 INFO
+	the policy with llm reward:
+- during the train: SR 0.0, nb_ep 5000
+- and during the test: SR 0.0
+
+
+14:42:50 OllamaChat.py:30 INFO
+	System: 
+        You are an expert in Reinforcement Learning specialized in designing reward functions.
+        Strict criteria:
+        - Provide dependancy if needed
+        - Provide ONLY the reward function code
+        - Use Python format
+        - Briefly comment on the function's logic
+        - Give no additional explanations
+        - Focus on the Gymnasium environment 
+        - Take into the action space
+        - STOP immediately after closing the ``` code block
+        
+
+14:42:52 DREFUN.py:90 INFO
+	Code nettoyé pour compilation :
+def cartpole_reward(observation, info):
+    # Default reward of +1 for every step taken
+    reward = 1.0
+    
+    # Check if the pole is upright
+    if abs(observation[2]) < 0.1745:  # 10 degrees in radians
+        reward += 1.0
+    
+    return reward
+
+14:42:52 DREFUN.py:112 WARNING
+	Error execution Error during reward function execution: cartpole_reward() got an unexpected keyword argument 'action'
+
+14:42:54 DREFUN.py:90 INFO
+	Code nettoyé pour compilation :
+def cartpole_reward(observation, info):
+    # Default reward of +1 for every step taken
+    reward = 1.0
+    
+    # Check if the pole is upright
+    if abs(observation[2]) < 0.1745:  # 10 degrees in radians
+        reward += 1.0
+    
+    return reward
+
+14:42:54 DREFUN.py:112 WARNING
+	Error execution Error during reward function execution: cartpole_reward() got an unexpected keyword argument 'action'
+
+14:42:56 DREFUN.py:90 INFO
+	Code nettoyé pour compilation :
+def cartpole_reward(observation, info):
+    # Default reward of +1 for every step taken
+    reward = 1.0
+    
+    # Check if the pole is upright
+    if abs(observation[2]) < 0.1745:  # 10 degrees in radians
+        reward += 1.0
+    
+    return reward
+
+14:42:56 DREFUN.py:112 WARNING
+	Error execution Error during reward function execution: cartpole_reward() got an unexpected keyword argument 'action'
+
+14:43:03 OllamaChat.py:30 INFO
+	System: 
+        You are an expert in Reinforcement Learning specialized in designing reward functions.
+        Strict criteria:
+        - Provide dependancy if needed
+        - Provide ONLY the reward function code
+        - Use Python format
+        - Briefly comment on the function's logic
+        - Give no additional explanations
+        - Focus on the Gymnasium environment 
+        - Take into the action space
+        - STOP immediately after closing the ``` code block
+        
+
+14:43:07 DREFUN.py:90 INFO
+	Code nettoyé pour compilation :
+import numpy as np
+
+def custom_reward_function(observation, action):
+    # Extract observations
+    cart_position, cart_velocity, pole_angle, pole_angular_velocity = observation
+    
+    # Reward for keeping the pole upright
+    angle_threshold = 0.1745  # 10 degrees in radians
+    if abs(pole_angle) < angle_threshold:
+        reward = 1.0
+    else:
+        reward = -1.0
+    
+    # Penalize large cart velocities and angular velocities
+    velocity_penalty = np.clip(abs(cart_velocity), 0, 2)
+    angular_penalty = np.clip(abs(pole_angular_velocity), 0, 3)
+    
+    # Adjust reward based on penalties
+    reward -= (velocity_penalty + angular_penalty) * 0.1
+    
+    return reward
+
+14:43:14 DREFUN.py:224 INFO
+	pole_angle_diff : human 0.008089839423369912 llm 0.09089368688696405
+
+14:43:14 DREFUN.py:224 INFO
+	pole_position_diff : human 0.3163211106239204 llm 0.11101429662928808
+
+14:43:14 DREFUN.py:228 INFO
+	the policy with human reward:
+- during the train: SR 0.17151162790697674, nb_ep 344
+- and during the test: SR 0.75
+
+
+14:43:14 DREFUN.py:233 INFO
+	the policy with llm reward:
+- during the train: SR 0.0, nb_ep 5000
+- and during the test: SR 0.0
+
+
