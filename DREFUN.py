@@ -25,7 +25,7 @@ class DREFUN:
         self.llm = OllamaChat(
             model=model,
             system_prompt="""
-        You are an expert in Reinforcement Learning specialized in designing reward functions. 
+        You are an expert in Reinforcement Learning specialized in designing reward functions.
         Strict criteria:
         - Provide dependancy if needed
         - Provide ONLY the reward function code
@@ -77,7 +77,7 @@ class DREFUN:
     def _get_code(self, response: str) -> str:
         cleaned_response = response.strip("```").replace("python", "").strip()
         if "def " not in cleaned_response:
-            raise ValueError(
+            raise ValueError(  #TODO traiter cette erreur
                 "La réponse ne contient pas de définition de fonction valide."
             )
         logger.info("Code nettoyé pour compilation :\n" + cleaned_response)
@@ -180,7 +180,7 @@ class DREFUN:
         self,
         objectives_metrics: List[callable] = [],
         num_episodes: int = 100,
-        visual: bool = False,
+        visual: bool = False,  # TODO utiliser lles parametre
     ) -> Dict:
         """
         Evaluate policy performance for a given reward function
@@ -203,7 +203,7 @@ class DREFUN:
             self.reward_functions[-1],
             save_name=f"model/{self.learning_method}_{self.env.spec.name}{len(self.reward_functions)}.model",
         )
-        raw_states, raw_rewards, raw_sr_test = self.test_policy(policy)
+        raw_states, raw_rewards, raw_sr_test = self.test_policy(raw_policy)
         states, rewards, sr_test = self.test_policy(policy, self.reward_functions[-1])
         # TODO penser aux métrics objective propre à l'environnment, une raison de faire une class environnement extend de celle de base ?
         logger.info(

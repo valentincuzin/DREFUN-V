@@ -4,10 +4,10 @@ from DREFUN import DREFUN
 from RLalgo import PolitiqueDirectSearch
 import gymnasium as gym
 
-if __name__ == "__main__":
+if __name__ == "__main__":  # TODO parametrer le mode debug
     init_logger()
     logger = getLogger("DREFUN")
-    env = gym.make("CartPole-v1")
+    env = gym.make("LunarLander-v3")
     learning_method = PolitiqueDirectSearch(env)
     drefun = DREFUN(learning_method, env)
 
