@@ -16,32 +16,54 @@ def init_seed(seedval):
     
     
     
+import torch.nn as nn
+import torch.nn.functional as F
+
+
 class Politique(nn.Module):
-    def __init__(self, dim_entree:int, dim_sortie:int , dim_cachee:int):
+    def __init__(self, dim_entree:int, dim_sortie:int, couche_cachee:list):
+        """
+        dim_entree: Dimension de l'entrée (taille de l'état)
+        dim_sortie: Dimension de la sortie (nombre d'actions)
+        couche_cachee: Liste des tailles des couches cachées (exemple [64, 32])
+        """
         super(Politique, self).__init__()
         self.dim_entree = dim_entree
         self.dim_sortie = dim_sortie
-        self.dim_cachee = dim_cachee
-        self.fc1 = nn.Linear(self.dim_entree, self.dim_cachee)
-        self.fc2 = nn.Linear(self.dim_cachee, self.dim_sortie)
+        
+        # Créer dynamiquement les couches cachées
+        self.couches_cachees = []
+        input_size = self.dim_entree
+        for hidden_size in couche_cachee:
+            self.couches_cachees.append(nn.Linear(input_size, hidden_size))
+            input_size = hidden_size
+        self.couches_cachees = nn.ModuleList(self.couches_cachees)
+        
+        # La dernière couche qui produit la sortie
+        self.fc_out = nn.Linear(input_size, self.dim_sortie)
 
-    def forward(self, etat : np.ndarray):
-        x = F.relu(self.fc1(etat))
-        x = self.fc2(x)
-        return F.softmax(x, dim=1)
-
-    
-    def action(self, etat : np.ndarray) -> tuple[int,torch.Tensor]:
+    def forward(self, etat: torch.Tensor) -> torch.Tensor:
         """
-        Renvoi l'action a executer dans etat et la log proba de cette action
+        Etat: un tenseur d'état (entrée)
+        """
+        x = etat
+        for layer in self.couches_cachees:
+            x = F.relu(layer(x))
+        x = self.fc_out(x)
+        return F.softmax(x, dim=1)  # Softmax pour obtenir une distribution de probabilité
+
+    def action(self, etat: np.ndarray) -> tuple[int, torch.Tensor]:
+        """
+        Renvoi l'action à exécuter dans l'état et la log-proba de cette action.
         """
         if isinstance(etat, np.ndarray):
-            etat = torch.tensor(etat, dtype=torch.float).unsqueeze(0) 
+            etat = torch.tensor(etat, dtype=torch.float).unsqueeze(0)  # Ajouter une dimension pour le batch
         proba = self.forward(etat)
         m = Categorical(proba)
         action = m.sample()
         log_proba = m.log_prob(action)
         return action.item(), log_proba
+
         
     
     
@@ -93,10 +115,9 @@ def retours_cumules(recompenses : list, gamma: float =0.99):
     return retour_cum
 
 
-def reinforce2(env,politique, nb_episodes=2000, gamma=0.99,  max_t=500) -> list:
-    optimizer = optim.Adam(politique.parameters(), lr=1e-2)
+def reinforce2(env,politique, nb_episodes=2000, gamma=0.99,  max_t=500, model_name="temp") -> list:
     recompenses = []
-    optimizer = optim.Adam(politique.parameters(), lr=1e-2)
+    optimizer = optim.Adam(politique.parameters(), lr=1e-3)
     a_la_suite = 0
     sauvegarde = False
     for ep in range(nb_episodes):
@@ -107,14 +128,14 @@ def reinforce2(env,politique, nb_episodes=2000, gamma=0.99,  max_t=500) -> list:
         loss = loss_reinforce2(log_proba_ep, retours_cum)
         loss.backward()
         optimizer.step()
-        if recompenses[-1] == 500:
+        if recompenses[-1] >= 200:
             a_la_suite += 1
         else:
             a_la_suite = 0
         
-        if a_la_suite == 100 and not sauvegarde:
+        if a_la_suite == 50 and not sauvegarde:
             #sauvegarde du modèle dans le dossier model
-            torch.save(politique.state_dict(), "model/CartPole.pth")
+            torch.save(politique.state_dict(), "model/"+model_name)
             sauvegarde = True
             
         if ep % 100 == 0:
@@ -123,7 +144,12 @@ def reinforce2(env,politique, nb_episodes=2000, gamma=0.99,  max_t=500) -> list:
 
 
 
+
 if __name__ == "__main__":
-    env = gym.make("CartPole-v1")
-    politique = Politique(env.observation_space.shape[0], env.action_space.n, 12)
-    recompenses = reinforce2(env, politique)
+    env = gym.make("LunarLander-v2")
+    politique = Politique(
+        dim_entree=env.observation_space.shape[0],  # 8 dimensions de l'état
+        dim_sortie=env.action_space.n,  # 4 actions possibles
+        couche_cachee=[ 128, 256, 64, 32]
+    )
+    recompenses = reinforce2(env, politique, nb_episodes=5000, gamma=0.99, max_t=1000, model_name="LunarLander.pth")
