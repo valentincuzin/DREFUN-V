@@ -2,7 +2,9 @@ from copy import deepcopy
 
 import numpy as np
 import torch
+from logging import getLogger
 
+logger = getLogger("DREFUN")
 
 class PolitiqueDirectSearch:
     def __init__(self, env, det=True):
@@ -55,7 +57,7 @@ class PolitiqueDirectSearch:
             action = self.output(state)
             next_observation, reward, terminated, truncated, _ = self.env.step(action)
             if reward_func is not None:
-                reward = reward_func(next_observation, action)
+                reward = reward_func(next_observation, terminated, truncated)
             total_rec += reward
             state = next_observation
             if terminated:
