@@ -95,6 +95,7 @@ class OllamaChat:
                             json_response = json.loads(line.decode('utf-8'))
                             if 'message' in json_response:
                                 chunk = json_response['message'].get('content', '')
+                                print(chunk)
                                 full_response += chunk
                                 yield chunk
                         except json.JSONDecodeError:
@@ -102,7 +103,7 @@ class OllamaChat:
                 
                 if full_response:
                     self.add_message(full_response, role="assistant")
-            
+    
             return stream_response()
         
         except requests.exceptions.RequestException as e:
