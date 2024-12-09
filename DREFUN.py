@@ -1,6 +1,6 @@
 import gymnasium as gym
 import numpy as np
-from typing import List, Dict, Callable
+from typing import List, Dict, Callable, Generator
 
 from OllamaChat import OllamaChat
 from logging import getLogger
@@ -66,7 +66,8 @@ class DREFUN:
         """  # TODO better prompt with completion of the function
 
         self.llm.add_message(prompt)
-        response = self.llm.generate_response()  # TODO generate 2 responses
+        response = self.llm.generate_response(stream=True)
+        response = self.llm.print_Generator_and_return(response)
         response = self._get_code(response)
         reward_func = self._get_runnable_function(response)
         self.reward_functions.append(reward_func)
@@ -86,6 +87,7 @@ class DREFUN:
         if error is not None:
             self.llm.add_message(error)
             response = self.llm.generate_response()
+            response = self.llm.print_Generator_and_return(response)
             response = self._get_code(response)
         try:
             reward_func = self._compile_reward_function(response)
@@ -170,6 +172,7 @@ class DREFUN:
 
         self.llm.add_message(refinement_prompt)
         refined_response = self.llm.generate_response()
+        refined_response = self.llm.print_Generator_and_return(refined_response)
 
         return self._compile_reward_function(refined_response)
 
