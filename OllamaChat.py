@@ -3,7 +3,6 @@ import json
 from typing import List, Dict, Union, Optional, Generator
 from logging import getLogger
 
-logger = getLogger('DREFUN')
 
 OLLAMA_CHAT_API_URL = "http://localhost:11434/api/chat"
 
@@ -25,9 +24,11 @@ class OllamaChat:
         self.model = model
         self.messages: List[Dict[str, str]] = []
         self.options = options or {}
+
+        self.logger = getLogger('DREFUN')
         
         if system_prompt:
-            logger.info(f"System: {system_prompt}")
+            self.logger.info(f"System: {system_prompt}")
             self.add_message(system_prompt, role="system")
     
     def add_message(
@@ -106,8 +107,27 @@ class OllamaChat:
             return stream_response()
         
         except requests.exceptions.RequestException as e:
-            logger.error(f"Connection error: {e}")
+            self.logger.error(f"Connection error: {e}")
             return ""
+        
+
+    def print_Generator_and_return(
+            self, 
+            response: Generator | str):
+        """
+        Print the response if it's a generator
+        Args:
+            response (Generator | str): the response to print
+        Returns:
+            - the response formalized if is was a generator, the response itself otherwise.
+        """
+        if isinstance(response, Generator):
+            response_gen = response
+            response = ""
+            for chunk in response_gen:
+                print(chunk, end='', flush=True)
+                response += chunk
+        return response
 
 def main():
     chat = OllamaChat(

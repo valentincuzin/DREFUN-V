@@ -1,11 +1,12 @@
+from logging import getLogger
+from typing import Callable, Dict, Generator, List
+
 import gymnasium as gym
 import numpy as np
-from typing import List, Dict, Callable
 
 from OllamaChat import OllamaChat
 from logging import getLogger
-
-logger = getLogger("DREFUN")
+import logging
 
 
 class DREFUN:
@@ -43,6 +44,12 @@ class DREFUN:
         self.reward_functions: List[Callable] = []
         self.policy_performances: List[Dict] = []
 
+        self.logger = getLogger("DREFUN")
+        if logging.getLevelName(self.logger.level) == "DEBUG":
+            self.isStream = True
+        else:
+            self.isStream = False
+
     def generate_reward_function(self, task_description: str) -> Callable:
         """
         Generate reward function using LLM
@@ -74,8 +81,8 @@ class DREFUN:
         """
 
         self.llm.add_message(prompt)
-        response = self.llm.generate_response()  # TODO generate 2 responses
-        logger.debug(response)
+        response = self.llm.generate_response(stream=self.isStream)
+        response = self.llm.print_Generator_and_return(response)
         response = self._get_code(response)
         reward_func = self._get_runnable_function(response)
         self.reward_functions.append(reward_func)
@@ -88,13 +95,14 @@ class DREFUN:
             raise ValueError(  #TODO traiter cette erreur
                 "La réponse ne contient pas de définition de fonction valide."
             )
-        logger.info("Code nettoyé pour compilation :\n" + cleaned_response)
+        self.logger.info("Code nettoyé pour compilation :\n" + cleaned_response)
         return cleaned_response
 
     def _get_runnable_function(self, response: str, error: str = None) -> Callable:
         if error is not None:
             self.llm.add_message(error)
-            response = self.llm.generate_response()
+            response = self.llm.generate_response(stream=self.isStream)
+            response = self.llm.print_Generator_and_return(response)
             response = self._get_code(response)
         try:
             reward_func = self._compile_reward_function(response)
@@ -108,10 +116,10 @@ class DREFUN:
                 truncated=truncated,
             )
         except SyntaxError as e:
-            logger.warning(f"Error syntax {e}")
+            self.logger.warning(f"Error syntax {e}")
             return self._get_runnable_function(response, str(e))
         except RuntimeError as e:
-            logger.warning(f"Error execution {e}")
+            self.logger.warning(f"Error execution {e}")
             return self._get_runnable_function(response, str(e))
         return reward_func
 
@@ -152,7 +160,7 @@ class DREFUN:
         """
         try:
             reward = reward_function(*args, **kwargs)
-            logger.debug(f"Reward function output: {reward}")
+            self.logger.debug(f"Reward function output: {reward}")
         except Exception as e:
             raise RuntimeError(f"Error during reward function execution: {e}")
 
@@ -180,7 +188,8 @@ class DREFUN:
         """
 
         self.llm.add_message(refinement_prompt)
-        refined_response = self.llm.generate_response()
+        refined_response = self.llm.generate_response(stream=self.isStream)
+        refined_response = self.llm.print_Generator_and_return(refined_response)
 
         return self._compile_reward_function(refined_response)
 
@@ -214,12 +223,24 @@ class DREFUN:
         raw_states, raw_rewards, raw_sr_test = self.test_policy(raw_policy)
         states, rewards, sr_test = self.test_policy(policy, self.reward_functions[-1])
         # TODO penser aux métrics objective propre à l'environnment, une raison de faire une class environnement extend de celle de base ?
-        logger.info(
+        perso_raw_states = []
+        perso_states = []
+        
+        for objective_metric in objectives_metrics:
+            perso_raw_states = objective_metric(raw_states)
+            perso_states = objective_metric(states)
+
+        for i in range(len(perso_raw_states)):
+            self.logger.info(
+                f"{perso_raw_states[i][0]} : human {perso_raw_states[i][1]} llm {perso_states[i][1]}"
+            )
+        
+        self.logger.info(
             "the policy with human reward:"
             + f"\n- during the train: SR {raw_sr}, nb_ep {raw_nb_ep}"
             + f"\n- and during the test: SR {raw_sr_test}\n"
         )
-        logger.info(
+        self.logger.info(
             "the policy with llm reward:"
             + f"\n- during the train: SR {sr}, nb_ep {nb_ep}"
             + f"\n- and during the test: SR {sr_test}\n"
