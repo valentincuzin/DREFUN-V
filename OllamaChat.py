@@ -95,7 +95,6 @@ class OllamaChat:
                             json_response = json.loads(line.decode('utf-8'))
                             if 'message' in json_response:
                                 chunk = json_response['message'].get('content', '')
-                                print(chunk)
                                 full_response += chunk
                                 yield chunk
                         except json.JSONDecodeError:
