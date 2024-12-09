@@ -1,9 +1,10 @@
+from logging import getLogger
+from typing import Callable, Dict, List
+
 import gymnasium as gym
 import numpy as np
-from typing import List, Dict, Callable
 
 from OllamaChat import OllamaChat
-from logging import getLogger
 
 logger = getLogger("DREFUN")
 
@@ -203,6 +204,18 @@ class DREFUN:
         raw_states, raw_rewards, raw_sr_test = self.test_policy(raw_policy)
         states, rewards, sr_test = self.test_policy(policy, self.reward_functions[-1])
         # TODO penser aux métrics objective propre à l'environnment, une raison de faire une class environnement extend de celle de base ?
+        perso_raw_states = []
+        perso_states = []
+        
+        for objective_metric in objectives_metrics:
+            perso_raw_states = objective_metric(raw_states)
+            perso_states = objective_metric(states)
+
+        for i in range(len(perso_raw_states)):
+            logger.info(
+                f"{perso_raw_states[i][0]} : human {perso_raw_states[i][1]} llm {perso_states[i][1]}"
+            )
+        
         logger.info(
             "the policy with human reward:"
             + f"\n- during the train: SR {raw_sr}, nb_ep {raw_nb_ep}"
